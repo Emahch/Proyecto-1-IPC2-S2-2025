@@ -122,3 +122,5 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
     REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+INSERT into roles (codigo,nombre) VALUES (1,"Fabrica"), (2,"Punto Venta"), (3,"Financiero");
