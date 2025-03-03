@@ -1,0 +1,124 @@
+CREATE SCHEMA IF NOT EXISTS LaComputadoraFeliz;
+
+USE LaComputadoraFeliz;
+
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`componentes` (
+  `nombre` VARCHAR(30) NOT NULL,
+  `costo_unitario` DOUBLE NOT NULL,
+  `cantidad` INT NOT NULL,
+  PRIMARY KEY (`nombre`));
+  
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`computadoras` (
+  `nombre` VARCHAR(30) NOT NULL,
+  `precio_unitario` DOUBLE NOT NULL,
+  `costo_total` DOUBLE NOT NULL,
+  `cantidad` INT NOT NULL,
+  PRIMARY KEY (`nombre`));
+  
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`clientes` (
+  `nit` VARCHAR(10) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  `direccion` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`nit`));
+  
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`roles` (
+  `codigo` INT NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`codigo`));
+  
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`usuarios` (
+  `user` VARCHAR(30) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  `codigo_rol` INT NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`user`),
+  INDEX `fk_usuarios_rol_idx` (`codigo_rol` ASC) VISIBLE,
+  CONSTRAINT `fk_usuarios_rol`
+    FOREIGN KEY (`codigo_rol`)
+    REFERENCES `LaComputadoraFeliz`.`roles` (`codigo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`asignacion_componentes` (
+  `nombre_componente` VARCHAR(30) NOT NULL,
+  `nombre_computadora` VARCHAR(30) NOT NULL,
+  `cantidad_componentes` INT NOT NULL,
+  PRIMARY KEY (`nombre_componente`, `nombre_computadora`),
+  INDEX `fk_computadoras_idx` (`nombre_computadora` ASC) VISIBLE,
+  CONSTRAINT `fk_componentes`
+    FOREIGN KEY (`nombre_componente`)
+    REFERENCES `LaComputadoraFeliz`.`componentes` (`nombre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_computadoras`
+    FOREIGN KEY (`nombre_computadora`)
+    REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ensambles` (
+  `id` INT NOT NULL,
+  `nombre_computadora` VARCHAR(30) NOT NULL,
+  `usuario_ensamblador` VARCHAR(30) NOT NULL,
+  `fecha_ensamble` DATE NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_ensambles_user_idx` (`usuario_ensamblador` ASC) VISIBLE,
+  INDEX `fk_ensambles_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
+  CONSTRAINT `fk_ensambles_user`
+    FOREIGN KEY (`usuario_ensamblador`)
+    REFERENCES `LaComputadoraFeliz`.`usuarios` (`user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_ensambles_computadora`
+    FOREIGN KEY (`nombre_computadora`)
+    REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ventas` (
+  `id` INT NOT NULL,
+  `nombre_computadora` VARCHAR(30) NOT NULL,
+  `nit` VARCHAR(10) NOT NULL,
+  `cantidad` INT NOT NULL,
+  `fecha` DATE NOT NULL,
+  `total_costo` DOUBLE NOT NULL,
+  `total_venta` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`, `nombre_computadora`),
+  INDEX `fk_ventas_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
+  INDEX `fk_ventas_cliente_idx` (`nit` ASC) VISIBLE,
+  CONSTRAINT `fk_ventas_computadora`
+    FOREIGN KEY (`nombre_computadora`)
+    REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_ventas_cliente`
+    FOREIGN KEY (`nit`)
+    REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
+  `id_venta` INT NOT NULL,
+  `nombre_computadora` VARCHAR(30) NOT NULL,
+  `nit_cliente` VARCHAR(10) NOT NULL,
+  `cantidad` VARCHAR(45) NOT NULL,
+  `fecha` DATE NOT NULL,
+  `total_perdido` DOUBLE NOT NULL,
+  PRIMARY KEY (`id_venta`, `nombre_computadora`),
+  INDEX `fk_devoluciones_venta_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
+  INDEX `fk_devoluciones_cliente_idx` (`nit_cliente` ASC) VISIBLE,
+  CONSTRAINT `fk_devoluciones_venta_id`
+    FOREIGN KEY (`id_venta`)
+    REFERENCES `LaComputadoraFeliz`.`ventas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_devoluciones_venta_computadora`
+    FOREIGN KEY (`nombre_computadora`)
+    REFERENCES `LaComputadoraFeliz`.`ventas` (`nombre_computadora`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_devoluciones_cliente`
+    FOREIGN KEY (`nit_cliente`)
+    REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
