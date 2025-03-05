@@ -19,7 +19,7 @@
     h2 {
         color: #EAEAEA;
     }
-    .contenedor {
+    .contenedor-login {
         background-color: #2E2E2E;
         border-radius: 10px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -27,8 +27,18 @@
         width: 100%;
         max-width: 500px;
     }
+    .contenedor {
+        background-color: #2E2E2E;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        padding: 3rem;
+        width: auto;
+        margin-left: 3rem;
+        margin-right: 3rem;
+    }
     .btn-primary {
         background-color: #FF3B30;
+        color: #EAEAEA;
         border: none;
     }
     .btn-primary:hover {
@@ -36,7 +46,7 @@
     }
     .navbar {
         background-color: #2E2E2E;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);   
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
     .navbar-brand, .nav-link {
         color: #EAEAEA !important;

@@ -1,7 +1,8 @@
 package com.joca.lacomputadorafeliz.authentication;
 
 import com.joca.lacomputadorafeliz.database.DBUsers;
-import com.joca.lacomputadorafeliz.exceptions.UserNotFoundException;
+import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
+import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.model.users.User;
 import com.mysql.cj.exceptions.DataReadException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,17 +13,17 @@ import java.sql.SQLException;
  *
  * @author emahch
  */
-public class IniciadorSesion {
+public class Authenticator {
 
     private DBUsers dbUsuarios;
 
-    public IniciadorSesion(HttpSession session) throws SQLException, ClassNotFoundException {
+    public Authenticator(HttpSession session) throws SQLException, ClassNotFoundException {
         dbUsuarios = new DBUsers(session);
     }
 
-    public User iniciarSesion(HttpServletRequest req) throws SQLException, DataReadException {
+    public User iniciarSesion(HttpServletRequest req) throws SQLException, InvalidDataException {
         if (req.getParameter("password") == null || req.getParameter("username") == null) {
-            throw new DataReadException("Por favor llene los campos vacios");
+            throw new InvalidDataException("Por favor llene los campos vacios");
         }
         try {
             User usuario = dbUsuarios.searchUser(req.getParameter("username"));
@@ -31,10 +32,13 @@ public class IniciadorSesion {
             if (usuario.getPassword().equals(contraseña)) {
                 return usuario;
             }
-        } catch (UserNotFoundException e) {
+        } catch (EntityNotFound e) {
             e.printStackTrace();
         }
-        throw new DataReadException("Nombre de usuario o contraseña incorrectos");
+        throw new InvalidDataException("Nombre de usuario o contraseña incorrectos");
     }
 
+    public void registerUser(HttpServletRequest req) throws SQLException, InvalidDataException {
+        
+    }
 }

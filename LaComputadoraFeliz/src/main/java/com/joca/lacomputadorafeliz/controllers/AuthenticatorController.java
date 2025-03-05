@@ -4,7 +4,8 @@
  */
 package com.joca.lacomputadorafeliz.controllers;
 
-import com.joca.lacomputadorafeliz.authentication.IniciadorSesion;
+import com.joca.lacomputadorafeliz.authentication.Authenticator;
+import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.users.User;
 import com.mysql.cj.exceptions.DataReadException;
 import java.io.IOException;
@@ -19,11 +20,11 @@ import java.sql.SQLException;
  *
  * @author joca
  */
-@WebServlet(name = "LoginServletController", urlPatterns = {"/controllers/login-servlet"})
-public class LoginServletController extends HttpServlet {
+@WebServlet(name = "AuthenticatorController", urlPatterns = {"/controllers/authenticator-servlet"})
+public class AuthenticatorController extends HttpServlet {
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP <code>Login</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -33,16 +34,17 @@ public class LoginServletController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //request.getSession().removeAttribute("usuario");
+        request.getSession().removeAttribute("usuario");
         try {
-            IniciadorSesion iniciadorSesion = new IniciadorSesion(request.getSession());
+            Authenticator iniciadorSesion = new Authenticator(request.getSession());
             User usuario = iniciadorSesion.iniciarSesion(request);
             request.getSession().setAttribute("usuario", usuario);
-            
-            response.sendRedirect(request.getContextPath() + "/Home.jsp");
-        } catch (ClassNotFoundException | SQLException | DataReadException e) {
+
+            response.sendRedirect(request.getContextPath() + "/admin/home.jsp");
+        } catch (ClassNotFoundException | SQLException | InvalidDataException e) {
             e.printStackTrace();
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
+
 }

@@ -4,9 +4,9 @@ package com.joca.lacomputadorafeliz.exceptions;
  *
  * @author emahch
  */
-public class UserNotFoundException extends Exception {
+public class EntityNotFound extends Exception {
 
-    public UserNotFoundException(String message) {
+    public EntityNotFound(String message) {
         super(message);
     }
 }
