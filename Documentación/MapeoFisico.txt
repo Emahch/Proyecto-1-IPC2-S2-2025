@@ -123,4 +123,5 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-INSERT into roles (codigo,nombre) VALUES (1,"Fabrica"), (2,"Punto Venta"), (3,"Financiero");
+INSERT into roles (codigo,nombre) VALUES (1,"Ensamblaje"), (2,"Ventas"), (3,"Administrador");
+INSERT into usuarios (user,nombre,password,codigo_rol) VALUES ("admin","$ADMINISTRADOR$",123456,3);

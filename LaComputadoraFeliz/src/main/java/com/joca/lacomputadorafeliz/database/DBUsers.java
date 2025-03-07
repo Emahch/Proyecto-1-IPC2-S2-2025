@@ -12,24 +12,26 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author joca
  */
 public class DBUsers extends DBConnection {
-    
+
     public DBUsers(HttpSession session) throws SQLException, ClassNotFoundException {
         super(session);
     }
-    
+
     /**
      * Busca un usuario en base al username
      *
      * @param username
      * @return Usuario encontrado
      * @throws java.sql.SQLException
-     * @throws josecarlos.magnetix.exceptions.UserNotFindException
+     * @throws EntityNotFound si no se encuentra el usuario
      */
     public User searchUser(String username) throws SQLException, EntityNotFound {
         PreparedStatement preparedStatement;
@@ -44,14 +46,20 @@ public class DBUsers extends DBConnection {
         userFound.setUserName(result.getString("user"));
         userFound.setName(result.getString("nombre"));
         userFound.setPassword(result.getString("password"));
-        
+
         UserRol userRol = new UserRol();
         userRol.setId(result.getInt("roles.codigo"));
         userRol.setName(result.getString("roles.nombre"));
         userFound.setUserRol(userRol);
         return userFound;
     }
-    
+
+    /**
+     * Crea un nuevo usuario en la base de datos
+     * 
+     * @param user
+     * @throws SQLException
+     */
     public void createUser(User user) throws SQLException {
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,password,id) VALUES (?,?,?,?);");
@@ -61,20 +69,30 @@ public class DBUsers extends DBConnection {
         preparedStatement.setInt(4, user.getUserRol().getId());
         preparedStatement.executeUpdate();
     }
-    
-    public UserRol searchRol(int id) throws SQLException, InvalidDataException {
+
+    /**
+     * Devuelve una lista de todos los usuarios del sistema
+     *
+     * @return Usuarios encontrados
+     * @throws java.sql.SQLException
+     */
+    public List<User> getUsers() throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM roles WHERE codigo = ?");
-        preparedStatement.setInt(1, id);
+        preparedStatement = connection.prepareCall("SELECT * FROM usuarios INNER JOIN roles Where codigo_rol = codigo;");
         ResultSet result = preparedStatement.executeQuery();
-        // Si no se encuentra ningun usuario se lanza una excepcion
-        if (!result.next()) {
-            throw new InvalidDataException("No se encontró el rol #\"" + id + "\"");
+
+        List<User> users = new ArrayList<>();
+        while (result.next()) {
+            User userFound = new User();
+            userFound.setUserName(result.getString("user"));
+            userFound.setName(result.getString("nombre"));
+            UserRol userRol = new UserRol();
+            userRol.setId(result.getInt("roles.codigo"));
+            userRol.setName(result.getString("roles.nombre"));
+            userFound.setUserRol(userRol);
+            users.add(userFound);
         }
-        UserRol userRol = new UserRol();
-        userRol.setId(result.getInt("codigo"));
-        userRol.setName(result.getString("nombre"));
-        return userRol;
+        return users;
     }
-    
+
 }

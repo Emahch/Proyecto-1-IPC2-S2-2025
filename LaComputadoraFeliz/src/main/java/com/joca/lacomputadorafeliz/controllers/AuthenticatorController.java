@@ -7,7 +7,6 @@ package com.joca.lacomputadorafeliz.controllers;
 import com.joca.lacomputadorafeliz.authentication.Authenticator;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.users.User;
-import com.mysql.cj.exceptions.DataReadException;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,6 +33,7 @@ public class AuthenticatorController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.removeAttribute("error");
         request.getSession().removeAttribute("usuario");
         try {
             Authenticator iniciadorSesion = new Authenticator(request.getSession());
@@ -43,6 +43,7 @@ public class AuthenticatorController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/home.jsp");
         } catch (ClassNotFoundException | SQLException | InvalidDataException e) {
             e.printStackTrace();
+            request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }

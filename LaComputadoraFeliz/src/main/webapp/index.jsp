@@ -21,7 +21,8 @@
                 </svg>
                 </div>
                 <h2 class="text-center">Iniciar Sesión</h2>
-                <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/login-servlet">
+                <h6 class="text-center" style="color:red">${error}</h6>
+                <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/authenticator-servlet">
                     <div class="mb-3">
                         <label for="username" class="form-label">Usuario</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu usuario" required>
