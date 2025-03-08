@@ -66,7 +66,7 @@ public class UsersController extends HttpServlet {
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al crear el usuario, intentalo de nuevo más tarde");
-            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
+            request.getRequestDispatcher("/controllers/roles-servlet").forward(request, response);
         } catch (InvalidDataException ex) {
             ex.printStackTrace();
             request.setAttribute("message", ex.getMessage());

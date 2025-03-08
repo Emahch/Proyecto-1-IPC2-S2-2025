@@ -26,7 +26,7 @@
         <div class="toast-container position-absolute p-3 top-10 end-0">
                  <%  String message = (String) request.getAttribute("message");
                      Object success = request.getAttribute("success");%>
-            <div id="toastMessage" class="toast align-items-center <%if (success != null) {%>text-bg-success<%}else {%>text-bg-danger"<%}%>role="alert" aria-live="polite" aria-atomic="true"
+            <div id="toastMessage" class="toast align-items-center <%if (success != null) {%>text-bg-success"<%}else {%>text-bg-danger"<%}%>role="alert" aria-live="polite" aria-atomic="true"
                <% if (message == null && success == null) { %> style="display: none;" <% }%>>
                 <div class="d-flex">
                     <div class="toast-body">

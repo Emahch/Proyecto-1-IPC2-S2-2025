@@ -38,7 +38,7 @@ public class EditUsersController extends HttpServlet {
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", e);
-            request.getRequestDispatcher("/admin/admin-users.jsp").forward(request, response);
+            request.getRequestDispatcher("/controllers/users-servlet").forward(request, response);
         }
     }
 

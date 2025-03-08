@@ -4,6 +4,7 @@
     Author     : joca
 --%>
 
+<%@page import="com.joca.lacomputadorafeliz.model.users.User"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -42,15 +43,19 @@
                             <td>${user.userName}</td>
                             <td>${user.name}</td>
                             <td>${user.userRol.name}</td>
-                            <td class="d-flex">
-                                <form method="">
-                                    <input name="username" value="${user.userName}" hidden="true" />
-                                    <button class="btn btn-warning btn-sm">Editar</button>
-                                </form>
-                                <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-users-servlet">
-                                    <input name="username" value="${user.userName}" hidden="true" />
-                                    <button class="btn btn-danger btn-sm mx-1">Eliminar</button>
-                                </form>
+                            <td>
+                                <c:if test="${user.userName != sessionScope.usuario.userName}">
+                                    <div class="d-flex">
+                                        <form method="">
+                                            <input name="username" value="${user.userName}" hidden="true" />
+                                            <button class="btn btn-warning btn-sm">Editar</button>
+                                        </form>
+                                        <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-users-servlet">
+                                            <input name="username" value="${user.userName}" hidden="true" />
+                                            <button class="btn btn-danger btn-sm mx-1">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
