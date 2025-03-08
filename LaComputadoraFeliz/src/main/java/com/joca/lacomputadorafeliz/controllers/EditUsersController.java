@@ -4,8 +4,7 @@
  */
 package com.joca.lacomputadorafeliz.controllers;
 
-import com.joca.lacomputadorafeliz.model.users.UserRol;
-import com.joca.lacomputadorafeliz.users.AdminRoles;
+import com.joca.lacomputadorafeliz.users.AdminUsers;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,18 +12,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
  * @author joca
  */
-@WebServlet(name = "RolesController", urlPatterns = {"/controllers/roles-servlet"})
-public class RolesController extends HttpServlet {
-
+@WebServlet(name = "EditUsersController", urlPatterns = {"/controllers/edit-users-servlet"})
+public class EditUsersController extends HttpServlet {
 
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Elimina un usuario
      *
      * @param request servlet request
      * @param response servlet response
@@ -35,14 +32,14 @@ public class RolesController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            AdminRoles adminRoles = new AdminRoles(request.getSession());
-            List<UserRol> roles = adminRoles.getUsers();
-            request.setAttribute("roles", roles);
-            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
+            AdminUsers adminUsers = new AdminUsers(request.getSession());
+            adminUsers.deleteUser(request);
+            request.getRequestDispatcher("/controllers/users-servlet").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", e);
             request.getRequestDispatcher("/admin/admin-users.jsp").forward(request, response);
         }
     }
+
 }

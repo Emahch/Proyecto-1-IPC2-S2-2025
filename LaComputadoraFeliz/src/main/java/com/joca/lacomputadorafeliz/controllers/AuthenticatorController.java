@@ -6,6 +6,7 @@ package com.joca.lacomputadorafeliz.controllers;
 
 import com.joca.lacomputadorafeliz.authentication.Authenticator;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
+import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
 import com.joca.lacomputadorafeliz.model.users.User;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -45,6 +46,10 @@ public class AuthenticatorController extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/index.jsp").forward(request, response);
+        } catch (PasswordNotFoundException e) {
+            e.printStackTrace();
+            request.setAttribute("usuario", request.getParameter("username"));
+            request.getRequestDispatcher("/pages/update-password.jsp").forward(request, response);
         }
     }
 

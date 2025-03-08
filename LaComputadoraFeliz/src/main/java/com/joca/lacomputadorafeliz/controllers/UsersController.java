@@ -4,6 +4,7 @@
  */
 package com.joca.lacomputadorafeliz.controllers;
 
+import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.users.AdminUsers;
 import com.joca.lacomputadorafeliz.model.users.User;
 import java.io.IOException;
@@ -56,6 +57,21 @@ public class UsersController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        try {
+            AdminUsers adminUsers = new AdminUsers(request.getSession());
+            adminUsers.createUser(request);
+            request.setAttribute("success", true);
+            request.setAttribute("message", "Usuario creado con exito");
+            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            request.setAttribute("message", "Ocurrio un error al crear el usuario, intentalo de nuevo más tarde");
+            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
+        } catch (InvalidDataException ex) {
+            ex.printStackTrace();
+            request.setAttribute("message", ex.getMessage());
+            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
+        }
         
     }
 }

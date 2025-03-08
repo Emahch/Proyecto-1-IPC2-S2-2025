@@ -4,8 +4,9 @@
  */
 package com.joca.lacomputadorafeliz.database;
 
-import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
+import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
+import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
 import com.joca.lacomputadorafeliz.model.users.User;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import jakarta.servlet.http.HttpSession;
@@ -45,7 +46,6 @@ public class DBUsers extends DBConnection {
         User userFound = new User();
         userFound.setUserName(result.getString("user"));
         userFound.setName(result.getString("nombre"));
-        userFound.setPassword(result.getString("password"));
 
         UserRol userRol = new UserRol();
         userRol.setId(result.getInt("roles.codigo"));
@@ -62,11 +62,10 @@ public class DBUsers extends DBConnection {
      */
     public void createUser(User user) throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,password,id) VALUES (?,?,?,?);");
+        preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,codigo_rol) VALUES (?,?,?);");
         preparedStatement.setString(1, user.getUserName());
         preparedStatement.setString(2, user.getName());
-        preparedStatement.setString(3, user.getPassword());
-        preparedStatement.setInt(4, user.getUserRol().getId());
+        preparedStatement.setInt(3, user.getUserRol().getId());
         preparedStatement.executeUpdate();
     }
 
@@ -93,6 +92,75 @@ public class DBUsers extends DBConnection {
             users.add(userFound);
         }
         return users;
+    }
+    
+    /**
+     * Busca una contraseña en base al username
+     *
+     * @param username
+     * @return Contraseña encontrada
+     * @throws java.sql.SQLException
+     * @throws com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException
+     */
+    public PasswordVTO getPassword(String username) throws SQLException, PasswordNotFoundException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT (password) FROM usuarios WHERE user = ?;");
+        preparedStatement.setString(1, username);
+        ResultSet result = preparedStatement.executeQuery();
+        // Si no se encuentra ningun usuario se lanza una excepcion
+        if (!result.next()) {
+            throw new PasswordNotFoundException("No se encontró la contraseña para el usuario \"" + username + "\"");
+        }
+        PasswordVTO password = new PasswordVTO(result.getString("password"), false);
+        if (!password.isValid()) {
+            throw new PasswordNotFoundException("La contraseña para el usuario \"" + username + "\" debe ser actualizada");
+        }
+        return password;
+    }
+    
+    /**
+     * Actualiza la contraseña de un usuario
+     * 
+     * @param password
+     * @param username
+     * @throws SQLException
+     */
+    public void updatePassword(PasswordVTO password, String username) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE usuarios SET password = ? WHERE user = ?;");
+        preparedStatement.setString(1, password.getPassword());
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+    }
+    
+    /**
+     * Elimina un usuario
+     * 
+     * @param username
+     * @throws java.sql.SQLException
+     */
+    public void deleteUser(String username) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("DELETE from usuarios WHERE user = ?;");
+        preparedStatement.setString(1, username);
+        preparedStatement.executeUpdate();
+    }
+    
+    /**
+     * Actualiza los datos de un usuario en el sistema
+     * 
+     * @param user
+     * @param originalUsername
+     * @throws SQLException
+     */
+    public void updateUser(User user, String originalUsername) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE usuarios SET user = ?, nombre = ?, codigo_rol = ? WHERE user = ?;");
+        preparedStatement.setString(1, user.getUserName());
+        preparedStatement.setString(2, user.getName());
+        preparedStatement.setInt(3, user.getUserRol().getId());
+        preparedStatement.setString(4, originalUsername);
+        preparedStatement.executeUpdate();
     }
 
 }

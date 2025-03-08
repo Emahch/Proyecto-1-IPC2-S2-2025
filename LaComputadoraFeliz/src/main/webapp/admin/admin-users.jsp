@@ -16,14 +16,18 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center my-4">Usuarios</h2>
-            <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/roles-servlet">
-                <button class="btn-primary rounded p-2 mb-2">
-                    <i class="bi bi-person-fill-add me-1"></i>Crear Nuevo Usuario</button>
-            </form>
-            <button class="btn-primary rounded p-2" style="text-decoration: none" href="${pageContext.servletContext.contextPath}/admin/roles.jsp">
-                <i class="bi bi-person-fill-add"></i>Administrar Roles</button>
-            <table class="table table-dark table-striped mt-4">
+            <div class="d-flex row">
+                <form method="GET" class="col d-flex mt-5" action="${pageContext.servletContext.contextPath}/controllers/roles-servlet">
+                    <button class="btn-primary rounded p-2">
+                        <i class="bi bi-person-fill-add me-1"></i>Crear Nuevo Usuario</button>
+                </form>
+                <h2 class="text-center my-4 col">Usuarios</h2>
+                <form method="GET" class="col d-flex justify-content-end mt-5" action="${pageContext.servletContext.contextPath}/controllers/roles-servlet">
+                    <button class="btn-primary rounded p-2" style="text-decoration: none" href="${pageContext.servletContext.contextPath}/admin/roles.jsp">
+                        <i class="bi bi-pencil me-1"></i>Editar Roles</button>
+                </form>
+            </div>
+            <table class="table table-dark shadow table-striped mt-4 table-hover">
                 <thead>
                     <tr>
                         <th>Usuario</th>
@@ -38,10 +42,14 @@
                             <td>${user.userName}</td>
                             <td>${user.name}</td>
                             <td>${user.userRol.name}</td>
-                            <td>
+                            <td class="d-flex">
                                 <form method="">
+                                    <input name="username" value="${user.userName}" hidden="true" />
                                     <button class="btn btn-warning btn-sm">Editar</button>
-                                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+                                <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-users-servlet">
+                                    <input name="username" value="${user.userName}" hidden="true" />
+                                    <button class="btn btn-danger btn-sm mx-1">Eliminar</button>
                                 </form>
                             </td>
                         </tr>

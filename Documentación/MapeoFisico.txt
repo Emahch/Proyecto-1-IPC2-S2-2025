@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`usuarios` (
   `user` VARCHAR(30) NOT NULL,
   `nombre` VARCHAR(100) NOT NULL,
   `codigo_rol` INT NOT NULL,
-  `password` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(100) NULL,
   PRIMARY KEY (`user`),
   INDEX `fk_usuarios_rol_idx` (`codigo_rol` ASC) VISIBLE,
   CONSTRAINT `fk_usuarios_rol`
@@ -123,5 +123,5 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-INSERT into roles (codigo,nombre) VALUES (1,"Ensamblaje"), (2,"Ventas"), (3,"Administrador");
+INSERT into roles (codigo,nombre) VALUES (1,"Ensamblaje"), (2,"Ventas"), (3,"Administración");
 INSERT into usuarios (user,nombre,password,codigo_rol) VALUES ("admin","$ADMINISTRADOR$",123456,3);
