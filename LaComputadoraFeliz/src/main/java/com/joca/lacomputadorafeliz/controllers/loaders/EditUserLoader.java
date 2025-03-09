@@ -39,7 +39,7 @@ public class EditUserLoader extends HttpServlet {
             throws ServletException, IOException {
         try {
             AdminRoles adminRoles = new AdminRoles(request.getSession());
-            List<UserRol> roles = adminRoles.getUsers();
+            List<UserRol> roles = adminRoles.getRoles();
             AdminUsers adminUsers = new AdminUsers(request.getSession());
             User user = adminUsers.getUser(request);
             request.setAttribute("roles", roles);

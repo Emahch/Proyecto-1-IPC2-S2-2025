@@ -36,7 +36,7 @@ public class EditRolesLoader extends HttpServlet {
             throws ServletException, IOException {
         try {
             AdminRoles adminRoles = new AdminRoles(request.getSession());
-            List<UserRol> roles = adminRoles.getUsers();
+            List<UserRol> roles = adminRoles.getRoles();
             request.setAttribute("roles", roles);
             request.getRequestDispatcher("/admin/edit-roles.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {

@@ -36,7 +36,7 @@ public class NewUserLoader extends HttpServlet {
             throws ServletException, IOException {
         try {
             AdminRoles adminRoles = new AdminRoles(request.getSession());
-            List<UserRol> roles = adminRoles.getUsers();
+            List<UserRol> roles = adminRoles.getRoles();
             request.setAttribute("roles", roles);
             request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {

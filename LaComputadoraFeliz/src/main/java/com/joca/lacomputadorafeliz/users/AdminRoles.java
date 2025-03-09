@@ -24,7 +24,7 @@ public class AdminRoles {
         dbRoles = new DBRoles(session);
     }
 
-    public List<UserRol> getUsers() throws SQLException {
+    public List<UserRol> getRoles() throws SQLException {
         List<UserRol> roles = dbRoles.getRoles();
         return roles;
     }
