@@ -1,5 +1,6 @@
 package com.joca.lacomputadorafeliz.authentication;
 
+import com.joca.lacomputadorafeliz.model.users.PasswordVTO;
 import com.joca.lacomputadorafeliz.database.DBUsers;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;

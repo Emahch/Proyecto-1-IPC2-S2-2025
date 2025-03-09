@@ -4,7 +4,6 @@
  */
 package com.joca.lacomputadorafeliz.database;
 
-import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import jakarta.servlet.http.HttpSession;

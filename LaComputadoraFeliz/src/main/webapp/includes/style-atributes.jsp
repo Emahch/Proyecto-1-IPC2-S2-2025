@@ -57,4 +57,14 @@
     .logo {
         margin-top: -0.25rem !important;
     }
+    .card {
+        background-color: #2E2E2E;
+        color: #C0C0C0;
+        border: none;
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .card:hover {
+        transform: scale(1.05);
+    }
 </style>

@@ -4,7 +4,7 @@
  */
 package com.joca.lacomputadorafeliz.controllers.users;
 
-import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
+import com.joca.lacomputadorafeliz.model.users.PasswordVTO;
 import com.joca.lacomputadorafeliz.database.DBUsers;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import java.io.IOException;

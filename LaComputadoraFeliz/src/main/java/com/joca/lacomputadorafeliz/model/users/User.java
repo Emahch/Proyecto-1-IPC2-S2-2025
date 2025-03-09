@@ -4,7 +4,7 @@ package com.joca.lacomputadorafeliz.model.users;
  *
  * @author emahch
  */
-public class User {
+public class User{
     public static final int MAX_LENGTH_NAME = 100;
     public static final int MAX_LENGTH_USERNAME = 30;
     

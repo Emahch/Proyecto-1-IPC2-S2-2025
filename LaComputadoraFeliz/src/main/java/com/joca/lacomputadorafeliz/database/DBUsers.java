@@ -4,7 +4,7 @@
  */
 package com.joca.lacomputadorafeliz.database;
 
-import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
+import com.joca.lacomputadorafeliz.model.users.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
@@ -71,8 +71,7 @@ public class DBUsers extends DBConnection {
         try {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getErrorCode());
-            if (e.getErrorCode() == 1062) {
+            if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
                 throw new InvalidDataException("El nombre de usuario no esta disponible");
             } else {
                 throw e;
@@ -176,7 +175,7 @@ public class DBUsers extends DBConnection {
         try {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
+            if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
                 throw new InvalidDataException("El nombre de usuario no esta disponible");
             } else {
                 throw e;

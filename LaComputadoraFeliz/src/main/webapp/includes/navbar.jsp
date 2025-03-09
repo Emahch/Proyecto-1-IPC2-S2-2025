@@ -24,7 +24,7 @@
                         <li class="nav-item"><button class="nav-link">Usuarios</button></li>
                     </form>
                     <li class="nav-item">
-                        <button class="nav-link" href="#">Computadoras</button>
+                        <a class="nav-link" href="/LaComputadoraFeliz/admin/admin-computers.jsp">Computadoras</a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#">Cargar</a></li>
                     <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/log-out-servlet">

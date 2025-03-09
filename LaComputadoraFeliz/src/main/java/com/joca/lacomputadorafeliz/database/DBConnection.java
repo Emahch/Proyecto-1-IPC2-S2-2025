@@ -13,7 +13,9 @@ import java.sql.SQLException;
  *
  * @author joca
  */
-public class DBConnection {
+public abstract class DBConnection {
+    
+    public static final int MYSQL_DUPLICATED_KEY = 1062;
     
     private static final String URL_MYSQL = "jdbc:mysql://localhost:3306/LaComputadoraFeliz";
     private static final String USER = "rootx";
@@ -43,4 +45,5 @@ public class DBConnection {
         session.removeAttribute("connection");
         session.setAttribute("connection", connection);
     }
+    
 }
