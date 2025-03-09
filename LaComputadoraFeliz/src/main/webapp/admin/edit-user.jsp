@@ -12,31 +12,34 @@
         <title>Nuevo Usuario</title>
         <jsp:include page="/includes/style-atributes.jsp"/>
         <jsp:include page="/includes/navbar.jsp"/>
-        
+
     </head>
     <body>
         <jsp:include page="/includes/toast.jsp" />
-        <h2 class="text-center my-4">Nuevo usuario</h2>
+        <h2 class="text-center my-4">Editar usuario</h2>
         <div class="contenedor">
-            <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/users-servlet">
+            <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/edit-user-servlet">
+                <input type="text" id="name" name="usernameOriginal" class="form-control" required value="${usuario.userName}" hidden="true">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre</label>
-                    <input type="text" id="name" name="name" class="form-control" required placeholder="Ingresa un nombre">
+                    <input type="text" id="name" name="name" class="form-control" required value="${usuario.name}">
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Nombre de usuario</label>
-                    <input type="text" id="username" name="username" class="form-control" required placeholder="Ingresa un usuario">
+                    <input type="text" id="username" name="username" class="form-control" required placeholder="Ingresa un usuario" value="${usuario.userName}">
                 </div>
                 <div class="mb-3">
                     <label for="rol" class="form-label">Rol</label>
                     <select id="rol" name="rol" class="form-select">
-                        <option selected>Selecciona un rol</option>
+                        <option selected value="${usuario.userRol.id}">${usuario.userRol.name}</option>
                         <c:forEach items="${roles}" var="rol">
-                            <option value="${rol.id}">${rol.name}</option>
+                            <c:if test="${rol.id != usuario.userRol.id}">
+                                <option value="${rol.id}">${rol.name}</option>
+                            </c:if>
                         </c:forEach>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </form>
         </div>
     </body>

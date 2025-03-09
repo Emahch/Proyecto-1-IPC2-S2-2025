@@ -4,8 +4,8 @@
  */
 package com.joca.lacomputadorafeliz.database;
 
+import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
-import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import jakarta.servlet.http.HttpSession;
 import java.sql.PreparedStatement;
@@ -80,6 +80,20 @@ public class DBRoles extends DBConnection {
             usersRoles.add(userRol);
         }
         return usersRoles;
+    }
+    
+    /**
+     * Actualiza el nombre de un rol
+     *
+     * @param rol
+     * @throws SQLException
+     */
+    public void updateRol(UserRol rol) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE roles SET nombre = ? WHERE codigo = ?;");
+        preparedStatement.setString(1, rol.getName());
+        preparedStatement.setInt(2, rol.getId());
+        preparedStatement.executeUpdate();
     }
 
 }

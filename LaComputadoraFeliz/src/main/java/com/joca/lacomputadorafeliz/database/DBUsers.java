@@ -6,6 +6,7 @@ package com.joca.lacomputadorafeliz.database;
 
 import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
+import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
 import com.joca.lacomputadorafeliz.model.users.User;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
@@ -56,17 +57,27 @@ public class DBUsers extends DBConnection {
 
     /**
      * Crea un nuevo usuario en la base de datos
-     * 
+     *
      * @param user
      * @throws SQLException
+     * @throws com.joca.lacomputadorafeliz.exceptions.InvalidDataException
      */
-    public void createUser(User user) throws SQLException {
+    public void createUser(User user) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,codigo_rol) VALUES (?,?,?);");
         preparedStatement.setString(1, user.getUserName());
         preparedStatement.setString(2, user.getName());
         preparedStatement.setInt(3, user.getUserRol().getId());
-        preparedStatement.executeUpdate();
+        try {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+            if (e.getErrorCode() == 1062) {
+                throw new InvalidDataException("El nombre de usuario no esta disponible");
+            } else {
+                throw e;
+            }
+        }
     }
 
     /**
@@ -93,7 +104,7 @@ public class DBUsers extends DBConnection {
         }
         return users;
     }
-    
+
     /**
      * Busca una contraseña en base al username
      *
@@ -117,10 +128,10 @@ public class DBUsers extends DBConnection {
         }
         return password;
     }
-    
+
     /**
      * Actualiza la contraseña de un usuario
-     * 
+     *
      * @param password
      * @param username
      * @throws SQLException
@@ -132,10 +143,10 @@ public class DBUsers extends DBConnection {
         preparedStatement.setString(2, username);
         preparedStatement.executeUpdate();
     }
-    
+
     /**
      * Elimina un usuario
-     * 
+     *
      * @param username
      * @throws java.sql.SQLException
      */
@@ -145,22 +156,32 @@ public class DBUsers extends DBConnection {
         preparedStatement.setString(1, username);
         preparedStatement.executeUpdate();
     }
-    
+
     /**
      * Actualiza los datos de un usuario en el sistema
-     * 
+     *
      * @param user
      * @param originalUsername
      * @throws SQLException
+     * @throws com.joca.lacomputadorafeliz.exceptions.InvalidDataException
      */
-    public void updateUser(User user, String originalUsername) throws SQLException {
+    public void updateUser(User user, String originalUsername) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareCall("UPDATE usuarios SET user = ?, nombre = ?, codigo_rol = ? WHERE user = ?;");
         preparedStatement.setString(1, user.getUserName());
         preparedStatement.setString(2, user.getName());
         preparedStatement.setInt(3, user.getUserRol().getId());
         preparedStatement.setString(4, originalUsername);
-        preparedStatement.executeUpdate();
+
+        try {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new InvalidDataException("El nombre de usuario no esta disponible");
+            } else {
+                throw e;
+            }
+        }
     }
 
 }

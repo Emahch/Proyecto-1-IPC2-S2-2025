@@ -2,9 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.joca.lacomputadorafeliz.controllers;
+package com.joca.lacomputadorafeliz.controllers.loaders;
 
-import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.users.AdminUsers;
 import com.joca.lacomputadorafeliz.model.users.User;
 import java.io.IOException;
@@ -20,8 +19,8 @@ import java.util.List;
  *
  * @author joca
  */
-@WebServlet(name = "UsersController", urlPatterns = {"/controllers/users-servlet"})
-public class UsersController extends HttpServlet {
+@WebServlet(name = "UsersLoader", urlPatterns = {"/controllers/users-loader"})
+public class UsersLoader extends HttpServlet {
 
     /**
      * Obtiene todos los usuarios hallados en la base de datos
@@ -45,33 +44,10 @@ public class UsersController extends HttpServlet {
             request.getRequestDispatcher("/admin/home.jsp").forward(request, response);
         }
     }
-
-    /**
-     * Crea un nuevo usuario en el sistema
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
+    
+    @Override 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            AdminUsers adminUsers = new AdminUsers(request.getSession());
-            adminUsers.createUser(request);
-            request.setAttribute("success", true);
-            request.setAttribute("message", "Usuario creado con exito");
-            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-            request.setAttribute("message", "Ocurrio un error al crear el usuario, intentalo de nuevo más tarde");
-            request.getRequestDispatcher("/controllers/roles-servlet").forward(request, response);
-        } catch (InvalidDataException ex) {
-            ex.printStackTrace();
-            request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
-        }
-        
+        doGet(request, response);
     }
 }

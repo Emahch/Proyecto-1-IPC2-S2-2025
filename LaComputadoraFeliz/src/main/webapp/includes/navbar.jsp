@@ -15,20 +15,24 @@
             </svg>
             La Computadora Feliz</a>
         <h5 class="text-center mt-2 ms-1" style="color: #888888">${sessionScope.usuario.userRol.name}</h5>
-        <c:if test="${sessionScope.usuario.userRol.id == 3}">
-            <div class="navbar-collapse">
-                <ul class="navbar-nav ms-auto">
+        <div class="navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <c:if test="${sessionScope.usuario.userRol.id == 3}">
                     <li class="nav-item">
                         <a class="nav-link active" href="${pageContext.servletContext.contextPath}/admin/home.jsp">Finanzas</a></li>
-                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/users-servlet">
+                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/users-loader">
                         <li class="nav-item"><button class="nav-link">Usuarios</button></li>
                     </form>
                     <li class="nav-item">
                         <button class="nav-link" href="#">Computadoras</button>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#">Cargar</a></li>
-                </ul>
-            </div>
-        </c:if>
+                    <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/log-out-servlet">
+                        <li class="nav-item"><button class="bg-transparent border-0 mx-4 mt-2"><i class="bi bi-power" style="color: #EAEAEA"></i></button></li>
+                    </form>
+                </c:if>
+            </ul>
+        </div>
+
     </div>
 </nav>

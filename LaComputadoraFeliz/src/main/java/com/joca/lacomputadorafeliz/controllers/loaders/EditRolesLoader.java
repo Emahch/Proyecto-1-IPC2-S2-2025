@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.joca.lacomputadorafeliz.controllers;
+package com.joca.lacomputadorafeliz.controllers.loaders;
 
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import com.joca.lacomputadorafeliz.users.AdminRoles;
@@ -19,8 +19,8 @@ import java.util.List;
  *
  * @author joca
  */
-@WebServlet(name = "RolesController", urlPatterns = {"/controllers/roles-servlet"})
-public class RolesController extends HttpServlet {
+@WebServlet(name = "EditRolesLoader", urlPatterns = {"/controllers/edit-roles-loader"})
+public class EditRolesLoader extends HttpServlet {
 
 
     /**
@@ -38,11 +38,17 @@ public class RolesController extends HttpServlet {
             AdminRoles adminRoles = new AdminRoles(request.getSession());
             List<UserRol> roles = adminRoles.getUsers();
             request.setAttribute("roles", roles);
-            request.getRequestDispatcher("/admin/new-user.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/edit-roles.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", e);
-            request.getRequestDispatcher("/admin/admin-users.jsp").forward(request, response);
+            request.setAttribute("message", "Ocurrio un error al obtener los roles");
+            request.getRequestDispatcher("/controllers/users-loader").forward(request, response);
         }
+    }
+    
+    @Override 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }

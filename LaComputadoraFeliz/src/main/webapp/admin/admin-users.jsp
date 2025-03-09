@@ -16,15 +16,16 @@
         <jsp:include page="/includes/navbar.jsp"/>
     </head>
     <body>
+        <jsp:include page="/includes/toast.jsp"/>
         <div class="container">
             <div class="d-flex row">
-                <form method="GET" class="col d-flex mt-5" action="${pageContext.servletContext.contextPath}/controllers/roles-servlet">
+                <form method="GET" class="col d-flex mt-5" action="${pageContext.servletContext.contextPath}/controllers/new-user-loader">
                     <button class="btn-primary rounded p-2">
                         <i class="bi bi-person-fill-add me-1"></i>Crear Nuevo Usuario</button>
                 </form>
                 <h2 class="text-center my-4 col">Usuarios</h2>
-                <form method="GET" class="col d-flex justify-content-end mt-5" action="${pageContext.servletContext.contextPath}/controllers/roles-servlet">
-                    <button class="btn-primary rounded p-2" style="text-decoration: none" href="${pageContext.servletContext.contextPath}/admin/roles.jsp">
+                <form method="GET" class="col d-flex justify-content-end mt-5" action="${pageContext.servletContext.contextPath}/controllers/edit-roles-loader">
+                    <button class="btn-primary rounded p-2">
                         <i class="bi bi-pencil me-1"></i>Editar Roles</button>
                 </form>
             </div>
@@ -44,18 +45,18 @@
                             <td>${user.name}</td>
                             <td>${user.userRol.name}</td>
                             <td>
-                                <c:if test="${user.userName != sessionScope.usuario.userName}">
-                                    <div class="d-flex">
-                                        <form method="">
-                                            <input name="username" value="${user.userName}" hidden="true" />
-                                            <button class="btn btn-warning btn-sm">Editar</button>
-                                        </form>
-                                        <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-users-servlet">
+                                <div class="d-flex">
+                                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-user-loader">
+                                        <input name="username" value="${user.userName}" hidden="true" />
+                                        <button class="btn btn-info btn-sm">Editar</button>
+                                    </form>
+                                    <c:if test="${user.userName != sessionScope.usuario.userName}">
+                                        <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/users-servlet">
                                             <input name="username" value="${user.userName}" hidden="true" />
                                             <button class="btn btn-danger btn-sm mx-1">Eliminar</button>
                                         </form>
-                                    </div>
-                                </c:if>
+                                    </c:if>
+                                </div>
                             </td>
                         </tr>
                     </c:forEach>

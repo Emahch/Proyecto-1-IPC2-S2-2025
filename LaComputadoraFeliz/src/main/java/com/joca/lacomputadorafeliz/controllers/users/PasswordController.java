@@ -2,13 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.joca.lacomputadorafeliz.controllers;
+package com.joca.lacomputadorafeliz.controllers.users;
 
 import com.joca.lacomputadorafeliz.authentication.PasswordVTO;
 import com.joca.lacomputadorafeliz.database.DBUsers;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
-import com.joca.lacomputadorafeliz.model.users.UserRol;
-import com.joca.lacomputadorafeliz.users.AdminRoles;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,7 +14,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
