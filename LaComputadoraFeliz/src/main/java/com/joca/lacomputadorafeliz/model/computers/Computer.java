@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Computer {
     
-    private static final int MAX_LENGHT_NAME = 30;
+    public static final int MAX_LENGHT_NAME = 30;
     
     private String name;
     private double price;

@@ -10,7 +10,7 @@ package com.joca.lacomputadorafeliz.model.computers;
  */
 public class Component{
     
-    private static final int MAX_LENGHT_NAME = 30;
+    public static final int MAX_LENGHT_NAME = 100;
     
     private String name;
     private double value;

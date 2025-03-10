@@ -4,6 +4,7 @@
     Author     : joca
 --%>
 
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,23 +19,41 @@
         <div class="container">
             <h2 class="text-center my-4">Computadoras</h2>
             <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Tarjeta 1
-                            <span class="badge bg-primary rounded-pill mx-2">14</span>
-                            </h5
-                            <p class="card-text">Descripción de la tarjeta 1.</p>
-                            <a href="/LaComputadoraFeliz/admin/edit-computer.jsp" class="btn btn-info">Editar</a>
-                            <button class="btn btn-primary mx-2">Eliminar</button>
+                <c:forEach items="${computers}" var="computer" >
+
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: white">${computer.name}
+                                    <c:if test="${computer.amount <= 3}" >
+                                        <span class="badge bg-danger rounded-pill mx-2">${computer.amount}</span>
+                                    </c:if>
+                                    <c:if test="${computer.amount > 3}" >
+                                        <span class="badge bg-primary rounded-pill mx-2">${computer.amount}</span>
+                                    </c:if>
+                                </h5
+                                <p class="card-text">Precio de venta: Q ${computer.price}<br>
+                                    Costo total: Q ${computer.value}</p>
+                                <div class="d-flex">
+                                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/computer-loader">
+                                        <input value="${computer.name}" name="computerName" hidden="true" />
+                                        <button class="btn btn-info">Editar</button>
+                                    </form>
+                                        <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/computer-servlet">
+                                        <input value="${computer.name}" name="computerName" hidden="true" />
+                                        <button class="btn btn-danger mx-2">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <form class="col">
+                </c:forEach>
+                <div class="col">
                     <div class="card" style="height: 100%">
-                        <button style="width: 100%; height: 100%; color: #FF3B30" class="bg-transparent border-0"><h1><i class="bi bi-plus-circle"></i></h1></button>
+                        <a style="width: 100%; height: 100%; color: #FF3B30" class="bg-transparent border-0 text-center" href="/LaComputadoraFeliz/admin/new-computer.jsp">
+                            <h1 class="my-auto d-flex justify-content-center align-items-center" style="height: 100%"><i class="bi bi-plus-circle align middle"></i></h1></a>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </body>

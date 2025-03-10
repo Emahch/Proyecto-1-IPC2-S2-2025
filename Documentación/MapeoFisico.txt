@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS LaComputadoraFeliz;
 USE LaComputadoraFeliz;
 
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`componentes` (
-  `nombre` VARCHAR(30) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
   `costo_unitario` DOUBLE NOT NULL,
   `cantidad` INT NOT NULL,
   PRIMARY KEY (`nombre`));
@@ -36,11 +36,11 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`usuarios` (
   CONSTRAINT `fk_usuarios_rol`
     FOREIGN KEY (`codigo_rol`)
     REFERENCES `LaComputadoraFeliz`.`roles` (`codigo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
     
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`asignacion_componentes` (
-  `nombre_componente` VARCHAR(30) NOT NULL,
+  `nombre_componente` VARCHAR(100) NOT NULL,
   `nombre_computadora` VARCHAR(30) NOT NULL,
   `cantidad_componentes` INT NOT NULL,
   PRIMARY KEY (`nombre_componente`, `nombre_computadora`),
@@ -48,13 +48,13 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`asignacion_componentes` (
   CONSTRAINT `fk_componentes`
     FOREIGN KEY (`nombre_componente`)
     REFERENCES `LaComputadoraFeliz`.`componentes` (`nombre`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_computadoras`
     FOREIGN KEY (`nombre_computadora`)
     REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
     
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ensambles` (
   `id` INT NOT NULL,
@@ -67,13 +67,13 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ensambles` (
   CONSTRAINT `fk_ensambles_user`
     FOREIGN KEY (`usuario_ensamblador`)
     REFERENCES `LaComputadoraFeliz`.`usuarios` (`user`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_ensambles_computadora`
     FOREIGN KEY (`nombre_computadora`)
     REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ventas` (
   `id` INT NOT NULL,
@@ -89,13 +89,13 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ventas` (
   CONSTRAINT `fk_ventas_computadora`
     FOREIGN KEY (`nombre_computadora`)
     REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_ventas_cliente`
     FOREIGN KEY (`nit`)
     REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
     
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
   `id_venta` INT NOT NULL,
@@ -110,18 +110,18 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
   CONSTRAINT `fk_devoluciones_venta_id`
     FOREIGN KEY (`id_venta`)
     REFERENCES `LaComputadoraFeliz`.`ventas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_devoluciones_venta_computadora`
     FOREIGN KEY (`nombre_computadora`)
     REFERENCES `LaComputadoraFeliz`.`ventas` (`nombre_computadora`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_devoluciones_cliente`
     FOREIGN KEY (`nit_cliente`)
     REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 INSERT into roles (codigo,nombre) VALUES (1,"Ensamblaje"), (2,"Ventas"), (3,"Administración");
 INSERT into usuarios (user,nombre,password,codigo_rol) VALUES ("admin","$ADMINISTRADOR$",123456,3);

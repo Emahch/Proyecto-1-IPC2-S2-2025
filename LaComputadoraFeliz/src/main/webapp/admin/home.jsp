@@ -14,6 +14,7 @@
         <jsp:include page="/includes/navbar.jsp"/>
     </head>
     <body>
+        <jsp:include page="/includes/toast.jsp"/>
         <div class="d-flex justify-content-center align-items-center my-4">
             <h2 class="text-center">Reportes</h2>
         </div>

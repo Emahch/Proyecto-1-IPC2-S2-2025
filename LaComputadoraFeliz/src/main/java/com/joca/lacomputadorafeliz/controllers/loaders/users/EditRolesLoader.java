@@ -2,13 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.joca.lacomputadorafeliz.controllers.loaders;
+package com.joca.lacomputadorafeliz.controllers.loaders.users;
 
-import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
-import com.joca.lacomputadorafeliz.model.users.User;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import com.joca.lacomputadorafeliz.users.AdminRoles;
-import com.joca.lacomputadorafeliz.users.AdminUsers;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,8 +19,8 @@ import java.util.List;
  *
  * @author joca
  */
-@WebServlet(name = "EditUserLoader", urlPatterns = {"/controllers/edit-user-loader"})
-public class EditUserLoader extends HttpServlet {
+@WebServlet(name = "EditRolesLoader", urlPatterns = {"/controllers/edit-roles-loader"})
+public class EditRolesLoader extends HttpServlet {
 
 
     /**
@@ -40,18 +37,11 @@ public class EditUserLoader extends HttpServlet {
         try {
             AdminRoles adminRoles = new AdminRoles(request.getSession());
             List<UserRol> roles = adminRoles.getRoles();
-            AdminUsers adminUsers = new AdminUsers(request.getSession());
-            User user = adminUsers.getUser(request);
             request.setAttribute("roles", roles);
-            request.setAttribute("usuario", user);
-            request.getRequestDispatcher("/admin/edit-user.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/edit-roles.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            request.setAttribute("message", "Ocurrio un error al acceder al usuario");
-            request.getRequestDispatcher("/controllers/users-loader").forward(request, response);
-        } catch (EntityNotFound ex) {
-            ex.printStackTrace();
-            request.setAttribute("message", "No se encontro el usuario");
+            request.setAttribute("message", "Ocurrio un error al obtener los roles");
             request.getRequestDispatcher("/controllers/users-loader").forward(request, response);
         }
     }

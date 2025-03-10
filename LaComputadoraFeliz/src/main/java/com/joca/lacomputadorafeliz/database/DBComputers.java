@@ -62,6 +62,9 @@ public class DBComputers extends DBConnection {
         preparedStatement = connection.prepareCall("SELECT * FROM computadoras WHERE nombre = ?");
         preparedStatement.setString(1, computerName);
         ResultSet result = preparedStatement.executeQuery();
+        if (!result.next()) {
+            throw new EntityNotFound("No se encontró la computadora \"" + computerName + "\"");
+        }
         return getComputerFromResult(result);
     }
 
@@ -84,7 +87,7 @@ public class DBComputers extends DBConnection {
      * @return Computadora encontrada
      * @throws java.sql.SQLException
      */
-    public List<Computer> getComputers() throws SQLException, EntityNotFound {
+    public List<Computer> getComputers() throws SQLException {
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareCall("SELECT * FROM computadoras;");
         ResultSet result = preparedStatement.executeQuery();
@@ -106,7 +109,7 @@ public class DBComputers extends DBConnection {
      */
     public void updateComputer(Computer computer, String originalName) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("UPDATE computadora SET nombre = ?, precio_unitario = ? WHERE codigo = ?;");
+        preparedStatement = connection.prepareCall("UPDATE computadoras SET nombre = ?, precio_unitario = ? WHERE nombre = ?;");
         preparedStatement.setString(1, computer.getName());
         preparedStatement.setDouble(2, computer.getPrice());
         preparedStatement.setString(3, originalName);
@@ -120,11 +123,23 @@ public class DBComputers extends DBConnection {
             }
         }
     }
+    
+    /**
+     * Actualiza el precio de una computadora
+     * 
+     * @param computerName
+     * @param value
+     * @throws SQLException 
+     */
+    public void updateComputerValue(String computerName, double value) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE computadoras SET costo_total = ? WHERE nombre = ?;");
+        preparedStatement.setDouble(1, value);
+        preparedStatement.setString(2, computerName);
+        preparedStatement.executeUpdate();
+    }
 
-    private Computer getComputerFromResult(ResultSet result) throws SQLException, EntityNotFound {
-        if (!result.next()) {
-            throw new EntityNotFound("No se encontró la computadora");
-        }
+    private Computer getComputerFromResult(ResultSet result) throws SQLException {
         Computer computer = new Computer();
         computer.setName(result.getString("nombre"));
         computer.setPrice(result.getDouble("precio_unitario"));
