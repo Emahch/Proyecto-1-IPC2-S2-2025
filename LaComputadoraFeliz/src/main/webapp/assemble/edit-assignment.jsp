@@ -19,11 +19,17 @@
         <h2 class="text-center my-4">Editar Requisito Componente</h2>
         <div class="contenedor">
             <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/edit-assignment-servlet">
-                <h2 class="text-center mb-2">Editando para la computadora: ${assignment.computerName}</h2>
-                <div class="mb-3">
-                    <label for="componentName" class="form-label">Nombre del componente</label>
-                    <input type="text" id="componentName" name="componentName" class="form-control-plaintext" style="color: white" readonly value="${assignment.componentName}" />
-                    <input type="text" id="computerName" name="computerName" hidden="true" readonly value="${assignment.computerName}" />
+                <h2 class="text-center mb-3">Editando para la computadora: ${assignment.computerName}</h2>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="mb-3">
+                        <label for="componentName" class="form-label">Nombre del componente</label>
+                        <input type="text" id="componentName" name="componentName" class="form-control-plaintext" style="color: white" readonly value="${assignment.componentName}" />
+                        <input type="text" id="computerName" name="computerName" hidden="true" readonly value="${assignment.computerName}" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="componentValue" class="form-label">Precio unitario (Q)</label>
+                        <input type="text" id="componentValue" name="componentValue" class="form-control-plaintext" style="color: white" readonly value="${assignment.componentValue}" />
+                    </div>
                 </div>
                 <div class="mb-3 col">
                     <label for="amount" class="form-label">Cantidad requerida</label>

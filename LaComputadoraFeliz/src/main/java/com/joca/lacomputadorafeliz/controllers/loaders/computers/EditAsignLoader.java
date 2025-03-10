@@ -38,7 +38,7 @@ public class EditAsignLoader extends HttpServlet {
             AdminAssignments adminAssignments = new AdminAssignments(request.getSession());
             ComponentAsignDTO assignment = adminAssignments.searchAssignment(request);
             request.setAttribute("assignment", assignment);
-            request.getRequestDispatcher("/admin/edit-assignment.jsp").forward(request, response);
+            request.getRequestDispatcher("/assemble/edit-assignment.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al obtener los datos de la computadoras");

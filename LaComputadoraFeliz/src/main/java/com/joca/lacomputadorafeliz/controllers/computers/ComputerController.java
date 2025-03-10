@@ -42,11 +42,11 @@ public class ComputerController extends HttpServlet {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al crear la computadora, intentalo de nuevo más tarde");
-            request.getRequestDispatcher("/admin/new-computer.jsp").forward(request, response);
+            request.getRequestDispatcher("/computer/new-computer.jsp").forward(request, response);
         } catch (InvalidDataException ex) {
             ex.printStackTrace();
             request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/admin/new-computer.jsp").forward(request, response);
+            request.getRequestDispatcher("/computer/new-computer.jsp").forward(request, response);
         }
     }
     

@@ -38,7 +38,7 @@ public class EditComponentLoader extends HttpServlet {
             AdminComponents adminComponents = new AdminComponents(request.getSession());
             Component component = adminComponents.searchComponent(request);
             request.setAttribute("component", component);
-            request.getRequestDispatcher("/admin/edit-component.jsp").forward(request, response);
+            request.getRequestDispatcher("/component/edit-component.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al obtener el componente");

@@ -42,11 +42,11 @@ public class ComponentController extends HttpServlet {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al crear el Componente, intentalo de nuevo más tarde");
-            request.getRequestDispatcher("/admin/new-component.jsp").forward(request, response);
+            request.getRequestDispatcher("/component/new-component.jsp").forward(request, response);
         } catch (InvalidDataException ex) {
             ex.printStackTrace();
             request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/admin/new-component.jsp").forward(request, response);
+            request.getRequestDispatcher("/component/new-component.jsp").forward(request, response);
         }
     }
     

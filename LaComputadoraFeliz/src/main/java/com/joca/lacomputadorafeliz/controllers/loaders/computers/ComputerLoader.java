@@ -49,7 +49,7 @@ public class ComputerLoader extends HttpServlet {
                     .collect(Collectors.toList());
             request.setAttribute("computer", computer);
             request.setAttribute("assignments", assignmentsOrdered);
-            request.getRequestDispatcher("/admin/edit-computer.jsp").forward(request, response);
+            request.getRequestDispatcher("/computer/edit-computer.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al obtener los datos de la computadoras");

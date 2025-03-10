@@ -8,6 +8,7 @@ import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.computers.ComponentAsignDTO;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,10 @@ public class DBComponentAssign extends DBConnection {
 
     public DBComponentAssign(HttpSession session) throws SQLException, ClassNotFoundException {
         super(session);
+    }
+    
+    public DBComponentAssign(Connection connection) {
+        super(connection);
     }
 
     /**
@@ -61,7 +66,8 @@ public class DBComponentAssign extends DBConnection {
      */
     public ComponentAsignDTO searchAsign(String componentName, String computerName) throws SQLException, EntityNotFound {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM asignacion_componentes WHERE nombre_componente = ? AND nombre_computadora = ?;");
+        preparedStatement = connection.prepareCall("SELECT * FROM asignacion_componentes INNER JOIN componentes "
+                + "WHERE nombre_componente = ? AND nombre_computadora = ? AND nombre_componente = componentes.nombre;");
         preparedStatement.setString(1, componentName);
         preparedStatement.setString(2, computerName);
         ResultSet result = preparedStatement.executeQuery();
@@ -96,7 +102,8 @@ public class DBComponentAssign extends DBConnection {
      */
     public List<ComponentAsignDTO> getComponentAsign(String computerName) throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM asignacion_componentes WHERE nombre_computadora = ?;");
+        preparedStatement = connection.prepareCall("SELECT * FROM asignacion_componentes INNER JOIN componentes "
+                + "WHERE nombre_computadora = ? AND nombre_componente = componentes.nombre");
         preparedStatement.setString(1, computerName);
         ResultSet result = preparedStatement.executeQuery();
 
@@ -128,6 +135,8 @@ public class DBComponentAssign extends DBConnection {
         asign.setComponentName(result.getString("nombre_componente"));
         asign.setComputerName(result.getString("nombre_computadora"));
         asign.setAmount(result.getInt("cantidad_componentes"));
+        asign.setComponentValue(result.getDouble("costo_unitario"));
+        asign.setStock(result.getInt("cantidad"));
         return asign;
     }
 }
