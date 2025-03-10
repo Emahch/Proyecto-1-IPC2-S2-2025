@@ -43,17 +43,33 @@ public class ComputersLoader extends HttpServlet {
                     .sorted(Comparator.comparingInt(Computer::getAmount))
                     .collect(Collectors.toList());
             request.setAttribute("computers", computersOrdered);
-            request.getRequestDispatcher("/admin/admin-computers.jsp").forward(request, response);
+            request.setAttribute("ascendent", true);
+            request.getRequestDispatcher("/computer/admin-computers.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al obtener las computadoras");
-            request.getRequestDispatcher("/admin/home.jsp").forward(request, response);
+            UserRedirect redirect = new UserRedirect();
+            redirect.redirect(request, response);
         }
     }
     
     @Override 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        try {
+            AdminComputers adminComputers = new AdminComputers(request.getSession());
+            List<Computer> computers = adminComputers.getComputers();
+            List<Computer> computersOrdered = computers.stream()
+                    .sorted(Comparator.comparingInt(Computer::getAmount).reversed())
+                    .collect(Collectors.toList());
+            request.setAttribute("computers", computersOrdered);
+            request.setAttribute("ascendent", false);
+            request.getRequestDispatcher("/computer/admin-computers.jsp").forward(request, response);
+        } catch (IOException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("message", "Ocurrio un error al obtener las computadoras");
+            UserRedirect redirect = new UserRedirect();
+            redirect.redirect(request, response);
+        }
     }
 }

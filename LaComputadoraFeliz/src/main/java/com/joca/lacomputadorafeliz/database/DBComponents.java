@@ -9,6 +9,7 @@ import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.computers.Component;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,13 +25,17 @@ public class DBComponents extends DBConnection {
     public DBComponents(HttpSession session) throws SQLException, ClassNotFoundException {
         super(session);
     }
-    
+
+    public DBComponents(Connection connection) {
+        super(connection);
+    }
+
     /**
      * Crea un nuevo componente
-     * 
+     *
      * @param component
-     * @throws SQLException 
-     * @throws com.joca.lacomputadorafeliz.exceptions.InvalidDataException 
+     * @throws SQLException
+     * @throws com.joca.lacomputadorafeliz.exceptions.InvalidDataException
      */
     public void create(Component component) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
@@ -123,6 +128,21 @@ public class DBComponents extends DBConnection {
                 throw e;
             }
         }
+    }
+
+    /**
+     * Actualiza la cantidad de un componente
+     *
+     * @param componentName
+     * @param amount
+     * @throws SQLException
+     */
+    public void updateComponentAmount(String componentName, int amount) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE componentes SET cantidad = ? WHERE nombre = ?;");
+        preparedStatement.setInt(1, amount);
+        preparedStatement.setString(2, componentName);
+        preparedStatement.executeUpdate();
     }
 
     private Component getComponentFromResult(ResultSet result) throws SQLException {

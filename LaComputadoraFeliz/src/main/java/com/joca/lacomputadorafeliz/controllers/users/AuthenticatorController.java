@@ -5,6 +5,7 @@
 package com.joca.lacomputadorafeliz.controllers.users;
 
 import com.joca.lacomputadorafeliz.authentication.Authenticator;
+import com.joca.lacomputadorafeliz.controllers.loaders.computers.UserRedirect;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
 import com.joca.lacomputadorafeliz.model.users.User;
@@ -40,8 +41,8 @@ public class AuthenticatorController extends HttpServlet {
             Authenticator iniciadorSesion = new Authenticator(request.getSession());
             User usuario = iniciadorSesion.iniciarSesion(request);
             request.getSession().setAttribute("usuario", usuario);
-
-            response.sendRedirect(request.getContextPath() + "/admin/home.jsp");
+            UserRedirect redirect = new UserRedirect();
+            request.getRequestDispatcher(redirect.redirect(request, response)).forward(request, response);
         } catch (ClassNotFoundException | SQLException | InvalidDataException e) {
             e.printStackTrace();
             request.setAttribute("error", e.getMessage());

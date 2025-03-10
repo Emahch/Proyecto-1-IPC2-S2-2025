@@ -6,7 +6,6 @@ package com.joca.lacomputadorafeliz.controllers.loaders.computers;
 
 import com.joca.lacomputadorafeliz.computers.AdminAssignments;
 import com.joca.lacomputadorafeliz.computers.AdminComponents;
-import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.model.computers.Component;
 import com.joca.lacomputadorafeliz.model.computers.ComponentAsignDTO;
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class NewAssignLoader extends HttpServlet {
                     .collect(Collectors.toList());
             request.setAttribute("components", componentsAvailables);
             request.setAttribute("computerName", request.getParameter("computerName"));
-            request.getRequestDispatcher("/admin/new-assignment.jsp").forward(request, response);
+            request.getRequestDispatcher("/assemble/new-assignment.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al obtener los datos de los componentes");

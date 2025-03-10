@@ -19,6 +19,13 @@
         <div class="container mb-4">
 
             <h2 class="text-center my-4">Componentes</h2>
+            <form action="${pageContext.servletContext.contextPath}/controllers/components-loader" method="${ascendent ? 'POST' : 'GET'}" class="mb-4">
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        Ordenados por cantidad: ${ascendent ? '▲ Ascendente' : '▼ Descendente'}
+                    </button>
+                </div>
+            </form>
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 <c:forEach items="${components}" var="component" >
                     <div class="col">
@@ -36,11 +43,13 @@
                                 <div class="d-flex">
                                     <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-component-loader">
                                         <input value="${component.name}" name="componentName" hidden="true" />
-                                        <button class="btn btn-info" type="submit">Editar</button>
+                                        <!-- boton editar -->
+                                        <button class="btn btn-info" type="submit"><i class="bi bi-pencil"></i></button>
                                     </form>
                                     <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/component-servlet">
                                         <input value="${component.name}" name="componentName" hidden="true" />
-                                        <button class="btn btn-danger mx-2">Eliminar</button>
+                                        <!-- boton eliminar -->
+                                        <button class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -49,7 +58,7 @@
                 </c:forEach>
                 <div class="col">
                     <div class="card" style="height: 100%">
-                        <a style="width: 100%; height: 100%; color: #FF3B30" class="bg-transparent border-0 text-center" href="/LaComputadoraFeliz/admin/new-component.jsp">
+                        <a style="width: 100%; height: 100%; color: #FF3B30" class="bg-transparent border-0 text-center" href="/LaComputadoraFeliz/component/new-component.jsp">
                             <h1 class="my-auto d-flex justify-content-center align-items-center" style="height: 100%"><i class="bi bi-plus-circle align middle"></i></h1></a>
                     </div>
                 </div>

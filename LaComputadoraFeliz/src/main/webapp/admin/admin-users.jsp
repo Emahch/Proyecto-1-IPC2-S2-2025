@@ -48,12 +48,14 @@
                                 <div class="d-flex">
                                     <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/edit-user-loader">
                                         <input name="username" value="${user.userName}" hidden="true" />
-                                        <button class="btn btn-info btn-sm">Editar</button>
+                                        <!-- boton editar -->
+                                        <button class="btn btn-info" type="submit"><i class="bi bi-pencil"></i></button>
                                     </form>
                                     <c:if test="${user.userName != sessionScope.usuario.userName}">
                                         <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/users-servlet">
                                             <input name="username" value="${user.userName}" hidden="true" />
-                                            <button class="btn btn-danger btn-sm mx-1">Eliminar</button>
+                                            <!-- boton eliminar -->
+                                            <button class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </c:if>
                                 </div>

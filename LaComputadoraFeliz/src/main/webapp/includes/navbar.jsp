@@ -30,10 +30,21 @@
                         <li class="nav-item"><button class="nav-link">Componentes</button></li>
                     </form>
                     <li class="nav-item"><a class="nav-link" href="#">Cargar</a></li>
-                    <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/log-out-servlet">
-                        <li class="nav-item"><button class="bg-transparent border-0 mx-4 mt-2"><i class="bi bi-power" style="color: #EAEAEA"></i></button></li>
+                    </c:if>
+                    <c:if test="${sessionScope.usuario.userRol.id == 1}">
+                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/assembles-loader">
+                        <li class="nav-item"><button class="nav-link">Historial ensambles</button></li>
                     </form>
-                </c:if>
+                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/computers-loader">
+                        <li class="nav-item"><button class="nav-link">Computadoras</button></li>
+                    </form>
+                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/components-loader">
+                        <li class="nav-item"><button class="nav-link">Componentes</button></li>
+                    </form>
+                    </c:if>
+                <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/log-out-servlet">
+                    <li class="nav-item"><button class="bg-transparent border-0 mx-4 mt-2"><i class="bi bi-power" style="color: #EAEAEA"></i></button></li>
+                </form>
             </ul>
         </div>
 

@@ -26,6 +26,10 @@ public abstract class DBConnection {
     public DBConnection(HttpSession session) throws SQLException, ClassNotFoundException {
         obtenerOCrearConexion(session);
     }
+    
+    public DBConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Intenta obtener una conexion existente en la sesion o crea una nueva

@@ -43,17 +43,33 @@ public class ComponentsLoader extends HttpServlet {
                     .sorted(Comparator.comparingInt(Component::getAmount))
                     .collect(Collectors.toList());
             request.setAttribute("components", componentsOrdered);
-            request.getRequestDispatcher("/admin/admin-components.jsp").forward(request, response);
+            request.setAttribute("ascendent", true);
+            request.getRequestDispatcher("/component/admin-components.jsp").forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al obtener los componentes");
-            request.getRequestDispatcher("/admin/home.jsp").forward(request, response);
+            UserRedirect redirect = new UserRedirect();
+            redirect.redirect(request, response);
         }
     }
     
     @Override 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        try {
+            AdminComponents adminComponents = new AdminComponents(request.getSession());
+            List<Component> components = adminComponents.getComponents();
+            List<Component> componentsOrdered = components.stream()
+                    .sorted(Comparator.comparingInt(Component::getAmount).reversed())
+                    .collect(Collectors.toList());
+            request.setAttribute("components", componentsOrdered);
+            request.setAttribute("ascendent", false);
+            request.getRequestDispatcher("/component/admin-components.jsp").forward(request, response);
+        } catch (IOException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("message", "Ocurrio un error al obtener los componentes");
+            UserRedirect redirect = new UserRedirect();
+            redirect.redirect(request, response);
+        }
     }
 }

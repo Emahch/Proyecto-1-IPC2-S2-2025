@@ -8,6 +8,7 @@ import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.computers.Computer;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +24,10 @@ public class DBComputers extends DBConnection {
     public DBComputers(HttpSession session) throws SQLException, ClassNotFoundException {
         super(session);
     }
+    
+    public DBComputers(Connection connection) {
+        super(connection);
+    }
 
     /**
      * Crea una nueva computadora
@@ -33,11 +38,10 @@ public class DBComputers extends DBConnection {
      */
     public void createComputer(Computer computer) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("INSERT INTO computadoras (nombre,precio_unitario,costo_total,cantidad) VALUES (?,?,?,?);");
+        preparedStatement = connection.prepareCall("INSERT INTO computadoras (nombre,precio_unitario,costo_total) VALUES (?,?,?);");
         preparedStatement.setString(1, computer.getName());
         preparedStatement.setDouble(2, computer.getPrice());
         preparedStatement.setDouble(3, 0);
-        preparedStatement.setInt(4, 0);
         try {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -139,12 +143,52 @@ public class DBComputers extends DBConnection {
         preparedStatement.executeUpdate();
     }
 
+    /**
+     * Devuelve el precio actual de la computadora
+     * 
+     * @param computerName
+     * @return precio
+     * @throws SQLException
+     * @throws EntityNotFound 
+     */
+    public double getComputerValue(String computerName) throws SQLException, EntityNotFound {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT (precio_unitario) FROM computadoras WHERE nombre = ?;");
+        preparedStatement.setString(1, computerName);
+        ResultSet result = preparedStatement.executeQuery();
+
+        if (!result.next()) {
+            throw new EntityNotFound("No se encontro el precio para la computadora " + computerName);
+        }
+        return result.getDouble("precio_unitario");
+    }
+            
     private Computer getComputerFromResult(ResultSet result) throws SQLException {
         Computer computer = new Computer();
         computer.setName(result.getString("nombre"));
         computer.setPrice(result.getDouble("precio_unitario"));
         computer.setValue(result.getDouble("costo_total"));
-        computer.setAmount(result.getInt("cantidad"));
+        computer.setAmount(getComputerCount(computer.getName()));
         return computer;
+    }
+    
+    private int getComputerCount(String computerName) throws SQLException {
+        int ensambles = 0;
+        int ventas = 0;
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT COUNT(*) as c FROM ensambles WHERE nombre_computadora = ?;");
+        preparedStatement.setString(1, computerName);
+        ResultSet result = preparedStatement.executeQuery();
+        if (result.next()) {
+            ensambles = result.getInt("c");
+        }
+        PreparedStatement preparedStatement2;
+        preparedStatement2 = connection.prepareCall("SELECT COUNT(*) as c FROM asignacion_ventas WHERE nombre_computadora = ?;");
+        preparedStatement2.setString(1, computerName);
+        ResultSet result2 = preparedStatement2.executeQuery();
+        if (result.next()) {
+            ventas = result2.getInt("c");
+        }
+        return (ensambles - ventas) <= 0 ? 0 : ensambles-ventas;
     }
 }

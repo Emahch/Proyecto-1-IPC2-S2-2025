@@ -12,7 +12,10 @@ public class ComponentAsignDTO {
     
     private String componentName;
     private String computerName;
+    private double componentValue;
+    private double computerValue;
     private int amount;
+    private int stock;
 
     public ComponentAsignDTO() {
     }
@@ -39,6 +42,30 @@ public class ComponentAsignDTO {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public double getComponentValue() {
+        return componentValue;
+    }
+
+    public void setComponentValue(double componentValue) {
+        this.componentValue = componentValue;
+    }
+
+    public double getComputerValue() {
+        return computerValue;
+    }
+
+    public void setComputerValue(double computerValue) {
+        this.computerValue = computerValue;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
     
     public boolean isValid() {

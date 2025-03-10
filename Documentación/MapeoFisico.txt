@@ -57,10 +57,12 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`asignacion_componentes` (
     ON UPDATE CASCADE);
     
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ensambles` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nombre_computadora` VARCHAR(30) NOT NULL,
   `usuario_ensamblador` VARCHAR(30) NOT NULL,
   `fecha_ensamble` DATE NOT NULL,
+  `costo_ensamble` DOUBLE NOT NULL,
+  `estado` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_ensambles_user_idx` (`usuario_ensamblador` ASC) VISIBLE,
   INDEX `fk_ensambles_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
@@ -77,49 +79,56 @@ CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ensambles` (
 
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`ventas` (
   `id` INT NOT NULL,
-  `nombre_computadora` VARCHAR(30) NOT NULL,
   `nit` VARCHAR(10) NOT NULL,
-  `cantidad` INT NOT NULL,
   `fecha` DATE NOT NULL,
   `total_costo` DOUBLE NOT NULL,
-  `total_venta` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`, `nombre_computadora`),
-  INDEX `fk_ventas_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
+  `total_venta` DOUBLE NOT NULL,
+  PRIMARY KEY (`id`),
   INDEX `fk_ventas_cliente_idx` (`nit` ASC) VISIBLE,
-  CONSTRAINT `fk_ventas_computadora`
-    FOREIGN KEY (`nombre_computadora`)
-    REFERENCES `LaComputadoraFeliz`.`computadoras` (`nombre`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
   CONSTRAINT `fk_ventas_cliente`
     FOREIGN KEY (`nit`)
     REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
-    
+
+CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`asignacion_ventas` (
+  `id_venta` INT NOT NULL,
+  `id_ensamble` INT NOT NULL,
+  `nombre_computadora` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`id_venta`, `id_ensamble`),
+  INDEX `fk_asignacion_ventas_id_ensamble_idx` (`id_ensamble` ASC) VISIBLE,
+  INDEX `fk_asignacion_ventas_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
+  CONSTRAINT `fk_asignacion_ventas_id_venta`
+    FOREIGN KEY (`id_venta`)
+    REFERENCES `LaComputadoraFeliz`.`ventas` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_asignacion_ventas_id_ensamble`
+    FOREIGN KEY (`id_ensamble`)
+    REFERENCES `LaComputadoraFeliz`.`ensambles` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_asignacion_ventas_computadora`
+    FOREIGN KEY (`nombre_computadora`)
+    REFERENCES `LaComputadoraFeliz`.`ensambles` (`nombre_computadora`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
 CREATE TABLE IF NOT EXISTS `LaComputadoraFeliz`.`devoluciones` (
   `id_venta` INT NOT NULL,
-  `nombre_computadora` VARCHAR(30) NOT NULL,
-  `nit_cliente` VARCHAR(10) NOT NULL,
-  `cantidad` VARCHAR(45) NOT NULL,
+  `id_ensamble` INT NOT NULL,
   `fecha` DATE NOT NULL,
   `total_perdido` DOUBLE NOT NULL,
-  PRIMARY KEY (`id_venta`, `nombre_computadora`),
-  INDEX `fk_devoluciones_venta_computadora_idx` (`nombre_computadora` ASC) VISIBLE,
-  INDEX `fk_devoluciones_cliente_idx` (`nit_cliente` ASC) VISIBLE,
+  PRIMARY KEY (`id_venta`, `id_ensamble`),
+  INDEX `fk_devoluciones_ensamble_id_idx` (`id_ensamble` ASC) VISIBLE,
   CONSTRAINT `fk_devoluciones_venta_id`
     FOREIGN KEY (`id_venta`)
     REFERENCES `LaComputadoraFeliz`.`ventas` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_devoluciones_venta_computadora`
-    FOREIGN KEY (`nombre_computadora`)
-    REFERENCES `LaComputadoraFeliz`.`ventas` (`nombre_computadora`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_devoluciones_cliente`
-    FOREIGN KEY (`nit_cliente`)
-    REFERENCES `LaComputadoraFeliz`.`clientes` (`nit`)
+  CONSTRAINT `fk_devoluciones_ensamble_id`
+    FOREIGN KEY (`id_ensamble`)
+    REFERENCES `LaComputadoraFeliz`.`ensambles` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
 

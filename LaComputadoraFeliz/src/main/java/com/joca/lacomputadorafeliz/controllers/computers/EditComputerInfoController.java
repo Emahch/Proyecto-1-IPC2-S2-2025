@@ -41,11 +41,11 @@ public class EditComputerInfoController extends HttpServlet {
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
             request.setAttribute("message", "Ocurrio un error al actualizar la computadora, intentalo de nuevo más tarde");
-            request.getRequestDispatcher("/controllers/computer-loader").forward(request, response);
+            request.getRequestDispatcher("/controllers/computer-loader?computerName="+request.getParameter("originalName")).forward(request, response);
         } catch (InvalidDataException ex) {
             ex.printStackTrace();
             request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/controllers/computer-loader").forward(request, response);
+            request.getRequestDispatcher("/controllers/computer-loader?computerName="+request.getParameter("originalName")).forward(request, response);
         }
     }
 }
