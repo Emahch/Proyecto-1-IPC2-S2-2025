@@ -7,6 +7,7 @@ package com.joca.lacomputadorafeliz.database;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.computers.Computer;
+import com.joca.lacomputadorafeliz.model.s.StateEnum;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +25,7 @@ public class DBComputers extends DBConnection {
     public DBComputers(HttpSession session) throws SQLException, ClassNotFoundException {
         super(session);
     }
-    
+
     public DBComputers(Connection connection) {
         super(connection);
     }
@@ -38,15 +39,19 @@ public class DBComputers extends DBConnection {
      */
     public void createComputer(Computer computer) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("INSERT INTO computadoras (nombre,precio_unitario,costo_total) VALUES (?,?,?);");
+        preparedStatement = connection.prepareCall("INSERT INTO computadoras (nombre,precio_unitario,costo_total,estado) VALUES (?,?,?,?);");
         preparedStatement.setString(1, computer.getName());
         preparedStatement.setDouble(2, computer.getPrice());
         preparedStatement.setDouble(3, 0);
+        preparedStatement.setString(4, StateEnum.HABILITADO.name());
         try {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
-                throw new InvalidDataException("El nombre de computadora no esta disponible");
+                if (isEnabled(computer.getName())) {
+                    throw new InvalidDataException("El nombre de computadora no esta disponible");
+                }
+                tryUpdateOldComputer(computer);
             } else {
                 throw e;
             }
@@ -73,15 +78,16 @@ public class DBComputers extends DBConnection {
     }
 
     /**
-     * Busca una computadora en base a su nombre
+     * Deshabilita una computadora en base a su nombre
      *
      * @param computerName
      * @throws SQLException
      */
     public void deleteComputer(String computerName) throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("DELETE FROM computadoras WHERE nombre = ?");
-        preparedStatement.setString(1, computerName);
+        preparedStatement = connection.prepareCall("UPDATE computadoras SET estado = ? WHERE nombre = ?");
+        preparedStatement.setString(1, StateEnum.DESHABILITADO.name());
+        preparedStatement.setString(2, computerName);
         preparedStatement.executeUpdate();
     }
 
@@ -93,7 +99,8 @@ public class DBComputers extends DBConnection {
      */
     public List<Computer> getComputers() throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM computadoras;");
+        preparedStatement = connection.prepareCall("SELECT * FROM computadoras WHERE estado = ?;");
+        preparedStatement.setString(1, StateEnum.HABILITADO.name());
         ResultSet result = preparedStatement.executeQuery();
 
         List<Computer> computers = new ArrayList<>();
@@ -113,27 +120,41 @@ public class DBComputers extends DBConnection {
      */
     public void updateComputer(Computer computer, String originalName) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("UPDATE computadoras SET nombre = ?, precio_unitario = ? WHERE nombre = ?;");
+        preparedStatement = connection.prepareCall("UPDATE computadoras SET nombre = ?, precio_unitario = ?, estado = ? WHERE nombre = ?;");
         preparedStatement.setString(1, computer.getName());
         preparedStatement.setDouble(2, computer.getPrice());
-        preparedStatement.setString(3, originalName);
+        preparedStatement.setString(3, StateEnum.HABILITADO.name());
+        preparedStatement.setString(4, originalName);
         try {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
-                throw new InvalidDataException("El nombre de computadora no esta disponible");
+                if (isEnabled(computer.getName())) {
+                    throw new InvalidDataException("El nombre de computadora no esta disponible");
+                }
+                tryUpdateOldComputer(computer);
+                deleteComputer(originalName);
             } else {
                 throw e;
             }
         }
     }
-    
+
+    public boolean isEnabled(String computerName) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT * FROM computadoras WHERE nombre = ? AND estado = ?;");
+        preparedStatement.setString(1, computerName);
+        preparedStatement.setString(2, StateEnum.HABILITADO.name());
+        ResultSet result = preparedStatement.executeQuery();
+        return result.next();
+    }
+
     /**
      * Actualiza el precio de una computadora
-     * 
+     *
      * @param computerName
      * @param value
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void updateComputerValue(String computerName, double value) throws SQLException {
         PreparedStatement preparedStatement;
@@ -145,11 +166,11 @@ public class DBComputers extends DBConnection {
 
     /**
      * Devuelve el precio actual de la computadora
-     * 
+     *
      * @param computerName
      * @return precio
      * @throws SQLException
-     * @throws EntityNotFound 
+     * @throws EntityNotFound
      */
     public double getComputerValue(String computerName) throws SQLException, EntityNotFound {
         PreparedStatement preparedStatement;
@@ -162,7 +183,7 @@ public class DBComputers extends DBConnection {
         }
         return result.getDouble("precio_unitario");
     }
-            
+
     private Computer getComputerFromResult(ResultSet result) throws SQLException {
         Computer computer = new Computer();
         computer.setName(result.getString("nombre"));
@@ -171,7 +192,16 @@ public class DBComputers extends DBConnection {
         computer.setAmount(getComputerCount(computer.getName()));
         return computer;
     }
-    
+
+    private void tryUpdateOldComputer(Computer computer) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE computadoras SET precio_unitario = ?, estado = ? WHERE nombre = ?;");
+        preparedStatement.setDouble(1, computer.getPrice());
+        preparedStatement.setString(2, StateEnum.HABILITADO.name());
+        preparedStatement.setString(3, computer.getName());
+        preparedStatement.executeUpdate();
+    }
+
     private int getComputerCount(String computerName) throws SQLException {
         int ensambles = 0;
         int ventas = 0;
@@ -189,6 +219,6 @@ public class DBComputers extends DBConnection {
         if (result.next()) {
             ventas = result2.getInt("c");
         }
-        return (ensambles - ventas) <= 0 ? 0 : ensambles-ventas;
+        return (ensambles - ventas) <= 0 ? 0 : ensambles - ventas;
     }
 }

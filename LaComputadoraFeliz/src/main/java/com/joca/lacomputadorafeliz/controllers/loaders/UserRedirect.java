@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.joca.lacomputadorafeliz.controllers.loaders.computers;
+package com.joca.lacomputadorafeliz.controllers.loaders;
 
 import com.joca.lacomputadorafeliz.model.users.User;
 import jakarta.servlet.ServletException;
@@ -36,11 +36,11 @@ public class UserRedirect {
             case 1:
                 return "/controllers/computers-loader";
             case 2:
-                return "/controllers/computers-loader";
+                return "/sales/search-client.jsp";
             case 3:
                 return "/admin/home.jsp";
             default:
-                return "/controllers/log-out-servlet";
+                return "/index.jsp";
         }
     }
 }

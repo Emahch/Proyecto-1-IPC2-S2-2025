@@ -8,6 +8,7 @@ import com.joca.lacomputadorafeliz.model.users.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
+import com.joca.lacomputadorafeliz.model.s.StateEnum;
 import com.joca.lacomputadorafeliz.model.users.User;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import jakarta.servlet.http.HttpSession;
@@ -64,15 +65,19 @@ public class DBUsers extends DBConnection {
      */
     public void createUser(User user) throws SQLException, InvalidDataException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,codigo_rol) VALUES (?,?,?);");
+        preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,codigo_rol,estado) VALUES (?,?,?,?);");
         preparedStatement.setString(1, user.getUserName());
         preparedStatement.setString(2, user.getName());
         preparedStatement.setInt(3, user.getUserRol().getId());
+        preparedStatement.setString(4, StateEnum.HABILITADO.name());
         try {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
-                throw new InvalidDataException("El nombre de usuario no esta disponible");
+                if (isEnabled(user.getUserName())) {
+                    throw new InvalidDataException("El nombre de usuario no esta disponible");
+                }
+                tryUpdateOldUser(user);
             } else {
                 throw e;
             }
@@ -87,7 +92,8 @@ public class DBUsers extends DBConnection {
      */
     public List<User> getUsers() throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM usuarios INNER JOIN roles Where codigo_rol = codigo;");
+        preparedStatement = connection.prepareCall("SELECT * FROM usuarios INNER JOIN roles Where codigo_rol = codigo AND estado = ?;");
+        preparedStatement.setString(1, StateEnum.HABILITADO.name());
         ResultSet result = preparedStatement.executeQuery();
 
         List<User> users = new ArrayList<>();
@@ -151,8 +157,9 @@ public class DBUsers extends DBConnection {
      */
     public void deleteUser(String username) throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("DELETE from usuarios WHERE user = ?;");
-        preparedStatement.setString(1, username);
+        preparedStatement = connection.prepareCall("UPDATE usuarios SET estado = ? WHERE user = ?;");
+        preparedStatement.setString(1, StateEnum.DESHABILITADO.name());
+        preparedStatement.setString(2, username);
         preparedStatement.executeUpdate();
     }
 
@@ -176,11 +183,35 @@ public class DBUsers extends DBConnection {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
-                throw new InvalidDataException("El nombre de usuario no esta disponible");
+                if (isEnabled(user.getUserName())) {
+                    throw new InvalidDataException("El nombre de usuario no esta disponible");
+                }
+                tryUpdateOldUser(user);
+                deleteUser(originalUsername);
             } else {
                 throw e;
             }
         }
+    }
+
+    public boolean isEnabled(String userName) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT * FROM usuarios WHERE user = ? AND estado = ?;");
+        preparedStatement.setString(1, userName);
+        preparedStatement.setString(2, StateEnum.HABILITADO.name());
+        ResultSet result = preparedStatement.executeQuery();
+        return result.next();
+    }
+
+    private void tryUpdateOldUser(User user) throws SQLException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("UPDATE usuarios SET nombre = ?, codigo_rol = ?, password = ?, estado = ? WHERE user = ?;");
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setInt(2, user.getUserRol().getId());
+        preparedStatement.setString(3, "");
+        preparedStatement.setString(4, StateEnum.HABILITADO.name());
+        preparedStatement.setString(5, user.getUserName());
+        preparedStatement.executeUpdate();
     }
 
 }

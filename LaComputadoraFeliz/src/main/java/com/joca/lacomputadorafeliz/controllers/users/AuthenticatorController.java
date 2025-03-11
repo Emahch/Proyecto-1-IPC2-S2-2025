@@ -5,7 +5,7 @@
 package com.joca.lacomputadorafeliz.controllers.users;
 
 import com.joca.lacomputadorafeliz.authentication.Authenticator;
-import com.joca.lacomputadorafeliz.controllers.loaders.computers.UserRedirect;
+import com.joca.lacomputadorafeliz.controllers.loaders.UserRedirect;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
 import com.joca.lacomputadorafeliz.model.users.User;
