@@ -4,11 +4,10 @@
  */
 package com.joca.lacomputadorafeliz.controllers.loaders.customers;
 
-import com.joca.lacomputadorafeliz.computers.AdminAssignments;
-import com.joca.lacomputadorafeliz.computers.AdminComputers;
+import com.joca.lacomputadorafeliz.sales.AdminCustomers;
+import com.joca.lacomputadorafeliz.database.DBCustomers;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
-import com.joca.lacomputadorafeliz.model.computers.ComponentAsignDTO;
-import com.joca.lacomputadorafeliz.model.computers.Computer;
+import com.joca.lacomputadorafeliz.model.sales.Customer;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,9 +15,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -26,7 +22,6 @@ import java.util.stream.Collectors;
  */
 @WebServlet(name = "CustomerLoader", urlPatterns = {"/controllers/customer-loader"})
 public class CustomerLoader extends HttpServlet {
-
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -40,24 +35,17 @@ public class CustomerLoader extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            AdminComputers adminComputers = new AdminComputers(request.getSession());
-            Computer computer = adminComputers.searchComputer(request);
-            AdminAssignments adminAssignments = new AdminAssignments(request.getSession());
-            List<ComponentAsignDTO> assignments = adminAssignments.getComponentsAssigned(request);
-            List<ComponentAsignDTO> assignmentsOrdered = assignments.stream()
-                    .sorted(Comparator.comparingInt(ComponentAsignDTO::getAmount))
-                    .collect(Collectors.toList());
-            request.setAttribute("computer", computer);
-            request.setAttribute("assignments", assignmentsOrdered);
-            request.getRequestDispatcher("/computer/edit-computer.jsp").forward(request, response);
+            AdminCustomers adminCustomers = new AdminCustomers(request.getSession());
+            Customer customer = adminCustomers.getCustomer(request);
+            request.getRequestDispatcher("/controllers/sale-resume-loader?nit="+request.getParameter("nit")).forward(request, response);
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            request.setAttribute("message", "Ocurrio un error al obtener los datos de la computadoras");
-            request.getRequestDispatcher("/controllers/computers-loader").forward(request, response);
+            request.setAttribute("message", "Ocurrio un error al obtener los datos del cliente");
+            request.getRequestDispatcher("/sales/new-sale.jsp").forward(request, response);
         } catch (EntityNotFound ex) {
             ex.printStackTrace();
-            request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/controllers/computers-loader").forward(request, response);
+            request.setAttribute("nit", request.getParameter("nit"));
+            request.getRequestDispatcher("/sales/new-customer.jsp").forward(request, response);
         }
     }
     

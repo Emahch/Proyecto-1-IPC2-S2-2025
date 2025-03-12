@@ -6,7 +6,7 @@ package com.joca.lacomputadorafeliz.database;
 
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
-import com.joca.lacomputadorafeliz.model.s.StateEnum;
+import com.joca.lacomputadorafeliz.model.StateEnum;
 import com.joca.lacomputadorafeliz.model.sales.Customer;
 import jakarta.servlet.http.HttpSession;
 import java.sql.PreparedStatement;
@@ -35,8 +35,9 @@ public class DBCustomers extends DBConnection {
      */
     public Customer searchCustomer(String nit) throws SQLException, EntityNotFound {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM clientes WHERE nit = ?;");
+        preparedStatement = connection.prepareCall("SELECT * FROM clientes WHERE nit = ? AND estado = ?;");
         preparedStatement.setString(1, nit);
+        preparedStatement.setString(2, StateEnum.HABILITADO.name());
         ResultSet result = preparedStatement.executeQuery();
         if (!result.next()) {
             throw new EntityNotFound("No se encontró el cliente con el nit \"" + nit + "\"");

@@ -8,7 +8,7 @@ import com.joca.lacomputadorafeliz.model.users.PasswordVTO;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.exceptions.PasswordNotFoundException;
-import com.joca.lacomputadorafeliz.model.s.StateEnum;
+import com.joca.lacomputadorafeliz.model.StateEnum;
 import com.joca.lacomputadorafeliz.model.users.User;
 import com.joca.lacomputadorafeliz.model.users.UserRol;
 import jakarta.servlet.http.HttpSession;

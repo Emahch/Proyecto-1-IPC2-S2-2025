@@ -7,7 +7,7 @@ package com.joca.lacomputadorafeliz.database;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.exceptions.InvalidDataException;
 import com.joca.lacomputadorafeliz.model.computers.Computer;
-import com.joca.lacomputadorafeliz.model.s.StateEnum;
+import com.joca.lacomputadorafeliz.model.StateEnum;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

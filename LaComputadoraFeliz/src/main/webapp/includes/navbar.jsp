@@ -53,7 +53,7 @@
                 </c:if>
                 <c:if test="${sessionScope.usuario.userRol.id == 2}">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.servletContext.contextPath}/sales/search-client.jsp">Iniciar Venta</a>
+                        <a class="nav-link" href="${pageContext.servletContext.contextPath}/sales/new-sale.jsp">Iniciar Venta</a>
                     </li>
                 </c:if>
                 <form method="POST" action="${pageContext.servletContext.contextPath}/controllers/log-out-servlet">

@@ -101,7 +101,8 @@ public class DBAssembly extends DBConnection {
 
     public List<AssemblyDTO> getAssembles() throws SQLException {
         PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareCall("SELECT * FROM ensambles;");
+        preparedStatement = connection.prepareCall("SELECT * FROM ensambles WHERE estado = ?;");
+        preparedStatement.setString(1, ComputerStateEnum.EN_VENTA.name());
         ResultSet result = preparedStatement.executeQuery();
 
         List<AssemblyDTO> assembles = new ArrayList<>();
@@ -109,6 +110,19 @@ public class DBAssembly extends DBConnection {
             assembles.add(getAssembleFromResult(result));
         }
         return assembles;
+    }
+    
+    public AssemblyDTO getAssemble(int id) throws SQLException, EntityNotFound {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT * FROM ensambles WHERE id = ? AND estado = ?;");
+        preparedStatement.setInt(1, id);
+        preparedStatement.setString(2, ComputerStateEnum.EN_VENTA.name());
+        ResultSet result = preparedStatement.executeQuery();
+
+        if (result.next()) {
+            return getAssembleFromResult(result);
+        }
+        throw new EntityNotFound("No se encontro la computadora con el id " + id);
     }
 
     private AssemblyDTO getAssembleFromResult(ResultSet result) throws SQLException {

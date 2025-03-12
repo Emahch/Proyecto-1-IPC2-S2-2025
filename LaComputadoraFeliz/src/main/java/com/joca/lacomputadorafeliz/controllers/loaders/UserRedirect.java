@@ -36,7 +36,7 @@ public class UserRedirect {
             case 1:
                 return "/controllers/computers-loader";
             case 2:
-                return "/sales/search-client.jsp";
+                return "/sales/new-sale.jsp";
             case 3:
                 return "/admin/home.jsp";
             default:

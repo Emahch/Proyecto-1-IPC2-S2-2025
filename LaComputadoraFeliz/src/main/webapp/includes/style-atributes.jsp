@@ -4,7 +4,7 @@
     Author     : joca
     Palette Color: 0A192F, EAEAEA, FF3B30, 2E2E2E
 --%>
-
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <script src="${pageContext.servletContext.contextPath}/Resources/js/jquery-3.7.1.js"></script>
 <script src="${pageContext.servletContext.contextPath}/Resources/js/bootstrap.bundle.js"></script>
@@ -12,7 +12,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
     body {
+        <c:if test="${sessionScope.usuario.userRol.id == null}">
+        background-color: #B71C1C;
+        </c:if>
+        <c:if test="${sessionScope.usuario.userRol.id == 1}">
+        background-color: #33691E;
+        </c:if>
+        <c:if test="${sessionScope.usuario.userRol.id == 2}">
+        background-color: #EF6C00;
+        </c:if>
+        <c:if test="${sessionScope.usuario.userRol.id == 3}">
         background-color: #0A192F;
+        </c:if>
         color: #EAEAEA;
         font-family: "Courrier New";
     }
