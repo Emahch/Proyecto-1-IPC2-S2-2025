@@ -139,4 +139,8 @@ public class DBComponentAssign extends DBConnection {
         asign.setStock(result.getInt("cantidad"));
         return asign;
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
 }

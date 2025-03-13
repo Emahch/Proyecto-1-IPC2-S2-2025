@@ -45,7 +45,7 @@ public class SaleResumeLoader extends HttpServlet {
             request.setAttribute("customer", customer);
             List<Integer> idAssembles = getSaleAssignments(request);
             DBAssembly dBAssembly = new DBAssembly(request.getSession());
-            List<AssemblyDTO> assembles = dBAssembly.getAssembles();
+            List<AssemblyDTO> assembles = dBAssembly.getAssemblesAvailables();
             Map<Boolean, List<AssemblyDTO>> assemblesPartitioned = assembles.stream()
                     .collect(Collectors.partitioningBy(as -> idAssembles.stream()
                     .noneMatch(id -> as.getId() == id)));

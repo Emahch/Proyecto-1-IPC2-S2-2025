@@ -83,6 +83,35 @@ public class DBUsers extends DBConnection {
             }
         }
     }
+    
+    /**
+     * Crea un nuevo usuario en la base de datos con contraseña indicada
+     *
+     * @param user
+     * @throws SQLException
+     * @throws com.joca.lacomputadorafeliz.exceptions.InvalidDataException
+     */
+    public void createUserWithPassword(User user, PasswordVTO password) throws SQLException, InvalidDataException {
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("INSERT INTO usuarios (user,nombre,codigo_rol,estado,password) VALUES (?,?,?,?,?);");
+        preparedStatement.setString(1, user.getUserName());
+        preparedStatement.setString(2, user.getName());
+        preparedStatement.setInt(3, user.getUserRol().getId());
+        preparedStatement.setString(4, StateEnum.HABILITADO.name());
+        preparedStatement.setString(5, password.getPassword());
+        try {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == MYSQL_DUPLICATED_KEY) {
+                if (isEnabled(user.getUserName())) {
+                    throw new InvalidDataException("El nombre de usuario no esta disponible");
+                }
+                tryUpdateOldUser(user);
+            } else {
+                throw e;
+            }
+        }
+    }
 
     /**
      * Devuelve una lista de todos los usuarios del sistema

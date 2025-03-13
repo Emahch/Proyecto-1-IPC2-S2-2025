@@ -101,6 +101,18 @@ public class DBAssembly extends DBConnection {
 
     public List<AssemblyDTO> getAssembles() throws SQLException {
         PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareCall("SELECT * FROM ensambles;");
+        ResultSet result = preparedStatement.executeQuery();
+
+        List<AssemblyDTO> assembles = new ArrayList<>();
+        while (result.next()) {
+            assembles.add(getAssembleFromResult(result));
+        }
+        return assembles;
+    }
+    
+    public List<AssemblyDTO> getAssemblesAvailables() throws SQLException {
+        PreparedStatement preparedStatement;
         preparedStatement = connection.prepareCall("SELECT * FROM ensambles WHERE estado = ?;");
         preparedStatement.setString(1, ComputerStateEnum.EN_VENTA.name());
         ResultSet result = preparedStatement.executeQuery();

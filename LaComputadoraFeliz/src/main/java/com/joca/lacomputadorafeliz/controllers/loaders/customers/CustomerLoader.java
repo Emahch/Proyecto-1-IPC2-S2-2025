@@ -5,7 +5,6 @@
 package com.joca.lacomputadorafeliz.controllers.loaders.customers;
 
 import com.joca.lacomputadorafeliz.sales.AdminCustomers;
-import com.joca.lacomputadorafeliz.database.DBCustomers;
 import com.joca.lacomputadorafeliz.exceptions.EntityNotFound;
 import com.joca.lacomputadorafeliz.model.sales.Customer;
 import java.io.IOException;

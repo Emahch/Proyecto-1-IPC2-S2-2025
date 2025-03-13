@@ -59,7 +59,7 @@ public class AssemblesLoader extends HttpServlet {
             throws ServletException, IOException {
         try {
             DBAssembly dBAssembly = new DBAssembly(request.getSession());
-            List<AssemblyDTO> assembles = dBAssembly.getAssembles();
+            List<AssemblyDTO> assembles = dBAssembly.getAssemblesAvailables();
             List<AssemblyDTO> assemblesOrderd;
             assemblesOrderd = assembles.stream()
                     .sorted(Comparator.comparing(AssemblyDTO::getDate))

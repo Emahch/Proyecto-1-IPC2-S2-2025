@@ -13,6 +13,7 @@ import com.joca.lacomputadorafeliz.model.computers.Component;
 import com.joca.lacomputadorafeliz.model.computers.ComponentAsignDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class AdminAssignments {
         List<ComponentAsignDTO> componentsAsigned = dbAssign.getComponentAsign(request.getParameter("computerName"));
         return componentsAsigned;
     }
+    
+    public List<ComponentAsignDTO> getComponentsAssigned(String computerName) throws SQLException {
+        List<ComponentAsignDTO> componentsAsigned = dbAssign.getComponentAsign(computerName);
+        return componentsAsigned;
+    }
 
     public void updateAssignmentAmount(HttpServletRequest request) throws SQLException, InvalidDataException, ClassNotFoundException, EntityNotFound {
         ComponentAsignDTO componentAssigned = getComponentAsignedFromRequest(request);
@@ -47,6 +53,11 @@ public class AdminAssignments {
         ComponentAsignDTO componentAssigned = getComponentAsignedFromRequest(request);
         dbAssign.addComponent(componentAssigned);
         updateComputerValue(request);
+    }
+    
+    public void createAssignment(ComponentAsignDTO componentAssigned) throws SQLException, InvalidDataException, ClassNotFoundException, EntityNotFound {
+        dbAssign.addComponent(componentAssigned);
+        updateComputerValue(componentAssigned.getComputerName(), dbAssign.getConnection());
     }
 
     public void deleteAsignment(HttpServletRequest request) throws SQLException, EntityNotFound, ClassNotFoundException {
@@ -79,5 +90,17 @@ public class AdminAssignments {
         }
         DBComputers dBComputers = new DBComputers(request.getSession());
         dBComputers.updateComputerValue(request.getParameter("computerName"), total_value);
+    }
+    
+    private void updateComputerValue(String computerName, Connection connection) throws SQLException, ClassNotFoundException, EntityNotFound {
+        List<ComponentAsignDTO> assignments = getComponentsAssigned(computerName);
+        DBComponents dBComponents = new DBComponents(connection);
+        double total_value = 0;
+        for (ComponentAsignDTO assignment : assignments) {
+            Component component = dBComponents.searchComponent(assignment.getComponentName());
+            total_value += component.getValue() * assignment.getAmount();
+        }
+        DBComputers dBComputers = new DBComputers(connection);
+        dBComputers.updateComputerValue(computerName, total_value);
     }
 }

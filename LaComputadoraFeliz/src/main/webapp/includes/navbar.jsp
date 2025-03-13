@@ -36,9 +36,9 @@
                         <li class="nav-item"><button class="nav-link">Historial ensambles</button></li>
                     </form>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.servletContext.contextPath}/sales/search-client.jsp">Iniciar Venta</a>
+                        <a class="nav-link" href="${pageContext.servletContext.contextPath}/sales/new-sale.jsp">Iniciar Venta</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#">Cargar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/admin/file-loader.jsp">Cargar</a></li>
                     </c:if>
                     <c:if test="${sessionScope.usuario.userRol.id == 1}">
                     <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/assembles-loader">
