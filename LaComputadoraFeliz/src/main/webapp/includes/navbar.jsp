@@ -20,21 +20,29 @@
         <div class="navbar-collapse">
             <ul class="navbar-nav ms-auto">
                 <c:if test="${sessionScope.usuario.userRol.id == 3}">
+                    <div class="dropdown ">
+                        <button class="btn btn-primary btn-sm mt-1 dropdown-toggle" type="button" id="dropdownComputadoras" data-bs-toggle="dropdown" aria-expanded="false">
+                            Computadoras
+                        </button>
+                        <ul class="dropdown-menu" style="background-color: #888888" aria-labelledby="dropdownComputadoras">
+                            <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/computers-loader">
+                                <li class="nav-item"><button class="nav-link">Computadoras</button></li>
+                            </form>
+                            <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/components-loader">
+                                <li class="nav-item"><button class="nav-link">Componentes</button></li>
+                            </form>
+                            <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/assembles-loader">
+                                <li class="nav-item"><button class="nav-link">Historial ensambles</button></li>
+                            </form>
+                        </ul>
+                    </div>
                     <li class="nav-item">
                         <a class="nav-link active" href="${pageContext.servletContext.contextPath}/admin/home.jsp">Finanzas</a>
                     </li>
                     <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/users-loader">
                         <li class="nav-item"><button class="nav-link">Usuarios</button></li>
                     </form>
-                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/computers-loader">
-                        <li class="nav-item"><button class="nav-link">Computadoras</button></li>
-                    </form>
-                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/components-loader">
-                        <li class="nav-item"><button class="nav-link">Componentes</button></li>
-                    </form>
-                    <form method="GET" action="${pageContext.servletContext.contextPath}/controllers/assembles-loader">
-                        <li class="nav-item"><button class="nav-link">Historial ensambles</button></li>
-                    </form>
+
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.servletContext.contextPath}/sales/new-sale.jsp">Iniciar Venta</a>
                     </li>

@@ -81,7 +81,7 @@ public class DBSales extends DBConnection {
         }
         return 1;
     }
-
+    
     public Connection getConnection() {
         return connection;
     }
